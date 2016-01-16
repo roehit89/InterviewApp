@@ -1,5 +1,7 @@
 package com.example.rohit.interviewapp;
 
+import java.util.List;
+
 /**
  * Created by Rohit on 1/15/2016.
  */
@@ -11,6 +13,8 @@ public class UserModel {
     private String email;
     private String phone;
     private String website;
+    private List<Address> addressList;
+    private List<company> companies;
 
     UserModel() {
     }
@@ -20,6 +24,7 @@ public class UserModel {
         private String suite;
         private String city;
         private String zipCode;
+        private List<Geo> geoList;
 
         Address(){
 

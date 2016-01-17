@@ -2,16 +2,13 @@ package com.example.rohit.interviewapp;
 
 import android.util.Log;
 
-import com.squareup.okhttp.OkHttpClient;
+import com.example.rohit.interviewapp.Model.ToDoModel;
+import com.example.rohit.interviewapp.Model.UserModel;
 
 import java.io.IOException;
 import java.util.List;
 
 import retrofit.Call;
-import retrofit.Callback;
-import retrofit.GsonConverterFactory;
-import retrofit.Response;
-import retrofit.Retrofit;
 
 /**
  * Created by Rohit on 1/15/2016.
@@ -37,7 +34,7 @@ public class FetchApiData {
         }
 
         for(ToDoModel eachObject : todoResultList){ // check if object is correctly received.
-            Log.i(Tag+" result title", eachObject.getToDoTitle());
+            Log.i(Tag+" result title", String.valueOf(eachObject.getTitle()));
         }
         return todoResultList;
     }

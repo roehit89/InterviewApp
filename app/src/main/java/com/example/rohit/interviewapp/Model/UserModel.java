@@ -1,4 +1,4 @@
-package com.example.rohit.interviewapp;
+package com.example.rohit.interviewapp.Model;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class UserModel {
     private List<Address> addressList;
     private List<company> companies;
 
-    UserModel() {
+    public UserModel() {
     }
 
     public class Address{

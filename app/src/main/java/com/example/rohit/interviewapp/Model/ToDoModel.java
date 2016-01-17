@@ -1,15 +1,18 @@
-package com.example.rohit.interviewapp;
+package com.example.rohit.interviewapp.Model;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Rohit on 1/15/2016.
  */
+
 public class ToDoModel {
 
     private Integer userId;
-    private String toDoTitle;
-    private boolean completed;
+    private String title;
+    private Boolean completed;
     private String dueDate;
     private Integer toDoId;
 
@@ -21,19 +24,19 @@ public class ToDoModel {
         this.userId = userId;
     }
 
-    public String getToDoTitle() {
-        return toDoTitle;
+    public String getTitle() {
+        return title;
     }
 
-    public void setToDoTitle(String toDoTitle) {
-        this.toDoTitle = toDoTitle;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public boolean isCompleted() {
+    public Boolean getCompleted() {
         return completed;
     }
 
-    public void setCompleted(boolean completed) {
+    public void setCompleted(Boolean completed) {
         this.completed = completed;
     }
 
@@ -45,11 +48,11 @@ public class ToDoModel {
         this.dueDate = dueDate;
     }
 
-    public int getToDoId() {
+    public Integer getToDoId() {
         return toDoId;
     }
 
-    public void setToDoId(int toDoId) {
+    public void setToDoId(Integer toDoId) {
         this.toDoId = toDoId;
     }
 }

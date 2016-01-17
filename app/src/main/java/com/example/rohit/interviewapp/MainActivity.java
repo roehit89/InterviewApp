@@ -6,13 +6,19 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.rohit.interviewapp.Model.ToDoModel;
+
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     FetchApiData fetchApiData = new FetchApiData();
+    List<ToDoModel> toDoModelList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,8 +29,11 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build(); // change this to work on a separate thread.
         StrictMode.setThreadPolicy(policy);
 
-        fetchApiData.getToDoList();
+        toDoModelList = fetchApiData.getToDoList();
 
+        for(ToDoModel obj : toDoModelList){
+            Log.i("main result ", obj.getTitle());
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

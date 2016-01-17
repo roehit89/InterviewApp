@@ -1,5 +1,8 @@
 package com.example.rohit.interviewapp;
 
+import com.example.rohit.interviewapp.Model.ToDoModel;
+import com.example.rohit.interviewapp.Model.UserModel;
+
 import java.util.List;
 
 import retrofit.Call;

@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.rohit.interviewapp.Model.ToDoModel;
+import com.example.rohit.interviewapp.Model.UserModel;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     FetchApiData fetchApiData = new FetchApiData();
     List<ToDoModel> toDoModelList;
+    List<UserModel>userModelList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
 
         toDoModelList = fetchApiData.getToDoList();
+        userModelList = fetchApiData.getUserList();
 
         for(ToDoModel obj : toDoModelList){
             Log.i("main result ", obj.getTitle());

@@ -17,7 +17,7 @@ public interface bytemarkClient {
    // String baseUrl = "http://69.119.215.250:3000";
 
     @GET("/users")
-    Call<UserModel> getAllUsers();
+    Call<List<UserModel>> getAllUsers();
   //  public List<UserModel> getAllUsers (@Path("user") String user);
 
     @GET("/todos")

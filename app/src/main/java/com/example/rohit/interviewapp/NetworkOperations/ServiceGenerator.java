@@ -1,4 +1,4 @@
-package com.example.rohit.interviewapp;
+package com.example.rohit.interviewapp.NetworkOperations;
 
 import com.squareup.okhttp.OkHttpClient;
 

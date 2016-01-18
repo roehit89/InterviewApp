@@ -1,9 +1,11 @@
-package com.example.rohit.interviewapp;
+package com.example.rohit.interviewapp.NetworkOperations;
 
 import android.util.Log;
 
 import com.example.rohit.interviewapp.Model.ToDoModel;
 import com.example.rohit.interviewapp.Model.UserModel;
+import com.example.rohit.interviewapp.NetworkOperations.ServiceGenerator;
+import com.example.rohit.interviewapp.NetworkOperations.bytemarkClient;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,7 +23,7 @@ public class FetchApiData {
     List<ToDoModel> todoResultList;
     List<UserModel>userResultList;
 
-    List<ToDoModel> getToDoList() {
+    public List<ToDoModel> getToDoList() {
         bytemarkClient client = ServiceGenerator.createService(bytemarkClient.class);
 
        // final String[] result = {null};
@@ -36,11 +38,12 @@ public class FetchApiData {
 
         for(ToDoModel eachObject : todoResultList){ // check if object is correctly received.
             Log.i(Tag+" result title", String.valueOf(eachObject.getTitle()));
+            Log.i(Tag+" result userId", String.valueOf(eachObject.getUserId()));
         }
         return todoResultList;
     }
 
-    List<UserModel> getUserList() {
+    public List<UserModel> getUserList() {
         bytemarkClient client = ServiceGenerator.createService(bytemarkClient.class);
 
         // final String[] result = {null};

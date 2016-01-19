@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     String Tag = "MainActivity";
     Context context = null;
     ListView listView;
+    ToDoModel tempTodo = new ToDoModel();
 
 
     @Override
@@ -49,8 +50,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         context = this;
-    //    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build(); // change this to work on a separate thread.
-    //    StrictMode.setThreadPolicy(policy);
+
 
         new Thread(new Runnable() {
 
@@ -60,7 +60,23 @@ public class MainActivity extends AppCompatActivity {
                 toDoModelList = fetchApiData.getToDoList();
                 userModelList = fetchApiData.getUserList();
 
+                ToDoModel temp = toDoModelList.get(0);
+                temp.setTitle("testing for todooooo");
+               // temp.setId();
+                Log.i("post request", String.valueOf(fetchApiData.postToDo(temp).getTitle()));
 
+
+                tempTodo.setId(4);
+                tempTodo.setTitle("Create a job once more edited");
+                tempTodo.setCompleted(true);
+                tempTodo.setDueDate("2016-03-21T12:22:45.000Z");
+                tempTodo.setUserId(4);
+
+//                fetchApiData.putToDo(tempTodo, 1).getTitle();
+          //      Log.i("put request", String.valueOf(fetchApiData.putToDo(tempTodo, 4).getTitle())); // put works perfectly
+         //       Log.i("post request", String.valueOf(fetchApiData.postToDo(tempTodo).getTitle())); // post works perfectly
+
+                fetchApiData.deleteToDo(4).getTitle(); // delete works perfectly
 
                 for(ToDoModel obj : toDoModelList){
                     Log.i(Tag+" todo cha id", String.valueOf(obj.getId()));
@@ -115,15 +131,6 @@ public class MainActivity extends AppCompatActivity {
 //        toDoModelList = fetchApiData.getToDoList();
 //        userModelList = fetchApiData.getUserList();
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
     @Override

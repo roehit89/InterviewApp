@@ -63,9 +63,9 @@ public class FetchApiData {
 
         for(UserModel eachObject : userResultList){ // check if object is correctly received.
             Log.i(Tag+" user result title", String.valueOf(eachObject.getName()));
-            Log.i(Tag+" user result city", String.valueOf(eachObject.getAddress().getCity()));
-            Log.i(Tag+" user result company", String.valueOf(eachObject.getCompany().getCompanyName()));
-            Log.i(Tag+" user result latitute", String.valueOf(eachObject.getAddress().getGeo().getLat()));
+//            Log.i(Tag+" user result city", String.valueOf(eachObject.getAddress().getCity()));
+//            Log.i(Tag+" user result company", String.valueOf(eachObject.getCompany().getCompanyName()));
+//            Log.i(Tag+" user result latitute", String.valueOf(eachObject.getAddress().getGeo().getLat()));
         }
         return userResultList;
     }
@@ -92,5 +92,46 @@ public class FetchApiData {
         }
 
         return toDoModelList;
+    }
+
+
+    public ToDoModel postToDo(ToDoModel toDoModel){
+        bytemarkClient client = ServiceGenerator.createService(bytemarkClient.class);
+
+        Call<ToDoModel> call = client.postToDo(toDoModel);
+        ToDoModel returnValue = null;
+        try{
+            returnValue = call.execute().body();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    return returnValue;
+    }
+
+
+    public ToDoModel putToDo(ToDoModel toDoModel,Integer id){
+        bytemarkClient client = ServiceGenerator.createService(bytemarkClient.class);
+        ToDoModel returnValue = null;
+        Call<ToDoModel> call = client.putToDo(id, toDoModel);
+        try{
+         returnValue = call.execute().body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return returnValue;
+    }
+
+    public ToDoModel deleteToDo(Integer id){
+        bytemarkClient client = ServiceGenerator.createService(bytemarkClient.class);
+        ToDoModel returnValue = null;
+
+        Call <ToDoModel> call = client.deleteToDo(id);
+        try{
+            returnValue = call.execute().body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return returnValue;
     }
 }

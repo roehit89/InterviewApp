@@ -19,6 +19,8 @@ public class ToDoModel implements Parcelable{
     private String dueDate;
     private Integer id;
 
+    public ToDoModel(){}
+
     protected ToDoModel(Parcel in) {
         title = in.readString();
         dueDate = in.readString();

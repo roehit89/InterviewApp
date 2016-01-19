@@ -7,6 +7,7 @@ import java.util.List;
 
 import retrofit.Call;
 import retrofit.http.GET;
+import retrofit.http.Path;
 
 
 /**
@@ -22,5 +23,8 @@ public interface bytemarkClient {
 
     @GET("/todos")
     Call <List<ToDoModel>> getAllTodos();
+
+    @GET("/todos/{id}")
+    Call <ToDoModel> getTodoById(@Path("id") Integer id);
 
 }

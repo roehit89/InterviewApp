@@ -6,11 +6,15 @@ import com.example.rohit.interviewapp.Model.ToDoModel;
 import com.example.rohit.interviewapp.Model.UserModel;
 import com.example.rohit.interviewapp.NetworkOperations.ServiceGenerator;
 import com.example.rohit.interviewapp.NetworkOperations.bytemarkClient;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.List;
 
 import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 /**
  * Created by Rohit on 1/15/2016.
@@ -22,6 +26,7 @@ public class FetchApiData {
     String Tag = "FetchedData";
     List<ToDoModel> todoResultList;
     List<UserModel>userResultList;
+    List<ToDoModel> toDoModelList;
 
     public List<ToDoModel> getToDoList() {
         bytemarkClient client = ServiceGenerator.createService(bytemarkClient.class);
@@ -63,5 +68,29 @@ public class FetchApiData {
             Log.i(Tag+" user result latitute", String.valueOf(eachObject.getAddress().getGeo().getLat()));
         }
         return userResultList;
+    }
+
+    public List<ToDoModel> getTodoById(Integer id){
+        bytemarkClient client = ServiceGenerator.createService(bytemarkClient.class);
+
+         List<ToDoModel> toDoModelList = null;
+
+        Call <ToDoModel> call = client.getTodoById(id);
+
+        try {
+            //call.execute().body()
+            ToDoModel toDoModel = call.execute().body();
+            todoResultList.add(toDoModel);
+            //call.execute().body();
+            //call.execute();
+        } catch (IOException e) {
+            Log.i(Tag+" myError",e.toString());
+        }
+        //todoResultList = getTodoById(id);
+        for(ToDoModel toDoModel : todoResultList) {
+            Log.i(Tag + " user result title10", toDoModel.getTitle());
+        }
+
+        return toDoModelList;
     }
 }

@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.rohit.interviewapp.Adapters.CustomAdapterForToDo;
 import com.example.rohit.interviewapp.Adapters.CustomAdapterForUsers;
@@ -31,11 +32,13 @@ public class MainActivity extends AppCompatActivity {
 
     FetchApiData fetchApiData = new FetchApiData();
     List<ToDoModel> toDoModelList;
+    List<ToDoModel> toDoModelListbyId;
     List<UserModel>userModelList;
     CustomAdapterForUsers customAdapter;
     String Tag = "MainActivity";
     Context context = null;
     ListView listView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
                 // operations to be performed on a background thread
                 toDoModelList = fetchApiData.getToDoList();
                 userModelList = fetchApiData.getUserList();
+
+
 
                 for(ToDoModel obj : toDoModelList){
                     Log.i(Tag+" todo cha id", String.valueOf(obj.getId()));
@@ -78,14 +83,27 @@ public class MainActivity extends AppCompatActivity {
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 UserModel userModel = userModelList.get(position);
                                 Integer userId = userModel.getId();
+                                toDoModelListbyId = new ArrayList<ToDoModel>();
+                                for(ToDoModel toDoModel : toDoModelList){ // ToDoModel object matching with clicked userId extracted and added to toDoModelListbyId
+                                    if(toDoModel.getUserId().equals(userId)){
+                                        Log.i("user id matched", toDoModel.getUserId().toString());
+                                        toDoModelListbyId.add(toDoModel);
+
+                                    }
+                                }
+                               // toDoModelListbyId = fetchApiData.getTodoById(1); // call toDoList based on user clicked // not used to avoid making another thread to fetch data from api
 
 
-                                Intent intent = new Intent(context,ToDoActivity.class);
-                                intent.putExtra("userId",userId);
-                               // intent.putExtra("toDoModelList", (Serializable) toDoModelList);
-                                intent.putParcelableArrayListExtra("toDoModelList", (ArrayList<? extends Parcelable>) toDoModelList);
-                                startActivity(intent);
-
+                                if(!toDoModelListbyId.isEmpty()) {
+                                    Intent intent = new Intent(context, ToDoActivity.class);
+                                    intent.putExtra("userId", userId);
+                                    // intent.putExtra("toDoModelList", (Serializable) toDoModelList);
+                                    //  intent.putParcelableArrayListExtra("toDoModelList", (ArrayList<? extends Parcelable>) toDoModelList);
+                                    intent.putParcelableArrayListExtra("toDoModelList", (ArrayList<? extends Parcelable>) toDoModelListbyId);
+                                    startActivity(intent);
+                                }
+                                else
+                                    Toast.makeText(context,"No to do list for "+userModel.getName(),Toast.LENGTH_LONG).show();
                             }
                         });
                     }

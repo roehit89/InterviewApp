@@ -2,6 +2,7 @@ package com.example.rohit.interviewapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -13,8 +14,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rohit.interviewapp.Adapters.CustomAdapterForToDo;
@@ -26,6 +30,7 @@ import com.example.rohit.interviewapp.NetworkOperations.FetchApiData;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,6 +44,13 @@ public class MainActivity extends AppCompatActivity {
     Context context = null;
     ListView listView;
     ToDoModel tempTodo = new ToDoModel();
+    CustomActionBar customActionBar = new CustomActionBar();
+    ImageButton addUser;
+    ImageButton deleteUser;
+    ImageButton editUser;
+    ImageButton navButton;
+    TextView barTitle = null;
+
 
 
     @Override
@@ -50,7 +62,17 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         context = this;
+        customActionBar.customActionBar(getSupportActionBar(), context);
 
+        barTitle = (TextView) findViewById(R.id.textViewTitle);
+        addUser = (ImageButton) findViewById(R.id.addButtonId);
+        deleteUser = (ImageButton) findViewById(R.id.deleteButtonId);
+        editUser = (ImageButton) findViewById(R.id.editButtonId);
+        navButton = (ImageButton) findViewById(R.id.navButtonId);
+
+        navButton.setVisibility(View.INVISIBLE);
+        editUser.setVisibility(View.INVISIBLE);
+        deleteUser.setVisibility(View.INVISIBLE);
 
         new Thread(new Runnable() {
 
@@ -76,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
           //      Log.i("put request", String.valueOf(fetchApiData.putToDo(tempTodo, 4).getTitle())); // put works perfectly
          //       Log.i("post request", String.valueOf(fetchApiData.postToDo(tempTodo).getTitle())); // post works perfectly
 
-                fetchApiData.deleteToDo(4).getTitle(); // delete works perfectly
+//                fetchApiData.deleteToDo(4).getTitle(); // delete works perfectly
 
                 for(ToDoModel obj : toDoModelList){
                     Log.i(Tag+" todo cha id", String.valueOf(obj.getId()));
@@ -94,11 +116,43 @@ public class MainActivity extends AppCompatActivity {
                         listView.setAdapter(customAdapter);
                         //@Bind(R.id.fullListView);
 
+                        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                            @Override
+                            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                                customActionBar.setActionBarColor("#29993d");
+                                editUser.setVisibility(View.VISIBLE);
+                                deleteUser.setVisibility(View.VISIBLE);
+
+
+                                barTitle.setText(userModelList.get(position).getName());
+
+                                return true;
+                            }
+                        });
+
+                        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                            @Override
+                            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                                editUser.setVisibility(View.INVISIBLE);
+                                deleteUser.setVisibility(View.INVISIBLE);
+                               // barTitle.setText("ToDo List");
+                                customActionBar.setActionBarColor("#831919");
+                                barTitle.setText("Interview app");
+                            }
+
+                            @Override
+                            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                            }
+                        });
+
                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 UserModel userModel = userModelList.get(position);
                                 Integer userId = userModel.getId();
+                                String userName = userModel.getName();
+                                Log.i("fetched username",userName);
                                 toDoModelListbyId = new ArrayList<ToDoModel>();
                                 for(ToDoModel toDoModel : toDoModelList){ // ToDoModel object matching with clicked userId extracted and added to toDoModelListbyId
                                     if(toDoModel.getUserId().equals(userId)){
@@ -113,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
                                 if(!toDoModelListbyId.isEmpty()) {
                                     Intent intent = new Intent(context, ToDoActivity.class);
                                     intent.putExtra("userId", userId);
+                                    intent.putExtra("userName",userName);
                                     // intent.putExtra("toDoModelList", (Serializable) toDoModelList);
                                     //  intent.putParcelableArrayListExtra("toDoModelList", (ArrayList<? extends Parcelable>) toDoModelList);
                                     intent.putParcelableArrayListExtra("toDoModelList", (ArrayList<? extends Parcelable>) toDoModelListbyId);
@@ -122,8 +177,9 @@ public class MainActivity extends AppCompatActivity {
                                     Toast.makeText(context,"No to do list for "+userModel.getName(),Toast.LENGTH_LONG).show();
                             }
                         });
-                    }
-                });
+                    } // end of run(UI thread
+                }); // end of run on UI thread
+
 
             }
 
@@ -136,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+       // getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -148,9 +204,9 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }

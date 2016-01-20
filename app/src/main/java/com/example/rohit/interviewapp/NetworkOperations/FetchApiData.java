@@ -42,8 +42,8 @@ public class FetchApiData {
         }
 
         for(ToDoModel eachObject : todoResultList){ // check if object is correctly received.
-            Log.i(Tag+" result title", String.valueOf(eachObject.getTitle()));
-            Log.i(Tag+" result userId", String.valueOf(eachObject.getUserId()));
+      //      Log.i(Tag+" result title", String.valueOf(eachObject.getTitle()));
+      //      Log.i(Tag+" result userId", String.valueOf(eachObject.getUserId()));
         }
         return todoResultList;
     }

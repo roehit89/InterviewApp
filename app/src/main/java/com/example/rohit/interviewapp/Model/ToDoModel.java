@@ -15,9 +15,9 @@ public class ToDoModel implements Parcelable{
 
     private Integer userId;
     private String title;
-    private Boolean completed;
     private String dueDate;
     private Integer id;
+    private Boolean completed;
 
     public ToDoModel(){}
 
@@ -26,8 +26,8 @@ public class ToDoModel implements Parcelable{
         dueDate = in.readString();
         userId = in.readInt();
         id = in.readInt();
-        completed = in.readByte()!=0; //myBoolean == true if byte != 0
-
+      //  completed = in.readByte()!=0; //myBoolean == true if byte != 0
+        completed =(Boolean) in.readValue(null);
     }
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -35,7 +35,9 @@ public class ToDoModel implements Parcelable{
         dest.writeString(dueDate);
         dest.writeInt(userId);
         dest.writeInt(id);
-        dest.writeByte((byte) (completed?1:0));
+        dest.writeValue(completed);
+       // dest.writeByte((byte) (completed ? 1 : 0));
+
     }
 
     public static final Creator<ToDoModel> CREATOR = new Creator<ToDoModel>() {

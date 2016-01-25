@@ -22,22 +22,22 @@ import butterknife.ButterKnife;
  */
 public class CustomAdapterForToDo extends BaseAdapter {
 
-    List<ToDoModel> toDoModelList;
+    List<ToDoModel> toDoModelListbyId;
     Context context;
-    public CustomAdapterForToDo(List<ToDoModel> toDoModelList,Context context)
+    public CustomAdapterForToDo(List<ToDoModel> toDoModelListbyId,Context context)
     {
-        this.toDoModelList = toDoModelList;
+        this.toDoModelListbyId = toDoModelListbyId;
         this.context = context;
     }
 
     @Override
     public int getCount() {
-        return toDoModelList.size();
+        return toDoModelListbyId.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return toDoModelList.get(position);
+        return toDoModelListbyId.get(position);
     }
 
     @Override
@@ -59,12 +59,12 @@ public class CustomAdapterForToDo extends BaseAdapter {
             viewHolder = (ViewHolder)convertView.getTag();
         }
 
-        viewHolder.toDoTitle.setText(toDoModelList.get(position).getTitle());
-        viewHolder.toDoId.setText(toDoModelList.get(position).getId().toString());
-        Log.i("Adapter madhe userId", String.valueOf(toDoModelList.get(position).getUserId()));
-        Log.i("Adapter madhe due date", String.valueOf(toDoModelList.get(position).getDueDate()));
-        Log.i("Adapter madhe contents", String.valueOf(toDoModelList.get(position).describeContents()));
-        Log.i("Adapter madhe id", String.valueOf(toDoModelList.get(position).getId()));
+        viewHolder.toDoTitle.setText(toDoModelListbyId.get(position).getTitle());
+        viewHolder.toDoDueDate.setText(toDoModelListbyId.get(position).getDueDate().toString());
+        Log.i("Adapter madhe userId", String.valueOf(toDoModelListbyId.get(position).getUserId()));
+        Log.i("Adapter madhe due date", String.valueOf(toDoModelListbyId.get(position).getDueDate()));
+        Log.i("Adapter madhe contents", String.valueOf(toDoModelListbyId.get(position).describeContents()));
+     //   Log.i("Adapter madhe id", String.valueOf(toDoModelList.get(position).getId()));
         return convertView;
 
       //  return null;
@@ -72,7 +72,7 @@ public class CustomAdapterForToDo extends BaseAdapter {
 
     public class ViewHolder{
 
-        @Bind(R.id.toDoId)TextView toDoId;
+        @Bind(R.id.toDoDueDate)TextView toDoDueDate;
         @Bind(R.id.toDoTitle)TextView toDoTitle;
 
         ViewHolder(View view){

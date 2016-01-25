@@ -108,7 +108,7 @@ public class UserModel {
         private String zipCode;
         private Geo geo;
 
-        Address(){
+        public Address(){
         }
 
         public String getStreet() {
@@ -156,7 +156,7 @@ public class UserModel {
             private String lat;
             private String lng;
 
-            Geo(){
+            public Geo(){
             }
             public String getLat() {
                 return lat;
@@ -184,7 +184,7 @@ public class UserModel {
         private String bs;
 
 
-        Company(){
+        public Company(){
         }
         public String getCompanyName() {
             return name;

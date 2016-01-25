@@ -1,19 +1,14 @@
 package com.example.rohit.interviewapp;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
-import android.nfc.Tag;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -21,8 +16,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.rohit.interviewapp.Adapters.CustomAdapterForToDo;
 import com.example.rohit.interviewapp.Adapters.CustomAdapterForUsers;
+import com.example.rohit.interviewapp.Fragments.UserFragment;
 import com.example.rohit.interviewapp.Model.ToDoModel;
 import com.example.rohit.interviewapp.Model.UserModel;
 import com.example.rohit.interviewapp.NetworkOperations.FetchApiData;
@@ -30,29 +25,55 @@ import com.example.rohit.interviewapp.NetworkOperations.FetchApiData;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements UserFragment.OnFragmentInteractionListener {
 
     FetchApiData fetchApiData = new FetchApiData();
-    List<ToDoModel> toDoModelList;
+    static List<ToDoModel> toDoModelList;
     List<ToDoModel> toDoModelListbyId;
-    List<UserModel>userModelList;
-    CustomAdapterForUsers customAdapter;
+    static List<UserModel>userModelList;
+
+    private CustomAdapterForUsers customAdapter;
     String Tag = "MainActivity";
     Context context = null;
-    ListView listView;
+    private ListView listView;
     ToDoModel tempTodo = new ToDoModel();
     CustomActionBar customActionBar = new CustomActionBar();
     ImageButton addUser;
     ImageButton deleteUser;
     ImageButton editUser;
     ImageButton navButton;
+
     TextView barTitle = null;
 
+    FragmentTransaction fragmentTransaction;
+    UserFragment userFragment;
 
+    public CustomAdapterForUsers getCustomAdapter() {
+        return customAdapter;
+    }
 
+    public void setCustomAdapter(CustomAdapterForUsers customAdapter) {
+        this.customAdapter = customAdapter;
+    }
+
+    public List<UserModel> getUserModelList()
+    {
+        return this.userModelList;
+    }
+
+    public void setUserModelList(List<UserModel> userModelList)
+    {
+        this.userModelList = userModelList;
+    }
+    public void addToUserModelList(UserModel userModel)
+    {
+        getUserModelList().add(userModel);
+
+//        getCustomAdapter().notifyDataSetChanged();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,52 +91,64 @@ public class MainActivity extends AppCompatActivity {
         editUser = (ImageButton) findViewById(R.id.editButtonId);
         navButton = (ImageButton) findViewById(R.id.navButtonId);
 
+        listView = (ListView)findViewById(R.id.fullListViewUsers);
+
         navButton.setVisibility(View.INVISIBLE);
         editUser.setVisibility(View.INVISIBLE);
         deleteUser.setVisibility(View.INVISIBLE);
+
+        addUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("button clicked"," button clicked");
+                userFragment = new UserFragment();
+                fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.add(R.id.user_fragmentContainer, userFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
+                listView.setVisibility(View.GONE); /// hide view on clicks made on fragment don't reflect on activity
+                addUser.setVisibility(View.INVISIBLE);
+            }
+        });
 
         new Thread(new Runnable() {
 
             @Override
             public void run() {
                 // operations to be performed on a background thread
-                toDoModelList = fetchApiData.getToDoList();
+          //      toDoModelList = fetchApiData.getToDoList();
                 userModelList = fetchApiData.getUserList();
 
-                ToDoModel temp = toDoModelList.get(0);
-                temp.setTitle("testing for todooooo");
-               // temp.setId();
-                Log.i("post request", String.valueOf(fetchApiData.postToDo(temp).getTitle()));
+                setUserModelList(userModelList);
 
+//                ToDoModel temp = toDoModelList.get(0);
+//                temp.setTitle("testing for todooooo");
+//
+      //          Log.i("post request", String.valueOf(fetchApiData.postToDo(temp).getTitle()));
 
-                tempTodo.setId(4);
-                tempTodo.setTitle("Create a job once more edited");
-                tempTodo.setCompleted(true);
-                tempTodo.setDueDate("2016-03-21T12:22:45.000Z");
-                tempTodo.setUserId(4);
+//
+//                tempTodo.setId(4);
+//                tempTodo.setTitle("Create a job once more edited");
+//                tempTodo.setCompleted(true);
+//                tempTodo.setDueDate("2016-03-21T12:22:45.000Z");
+//                tempTodo.setUserId(4);
 
-//                fetchApiData.putToDo(tempTodo, 1).getTitle();
-          //      Log.i("put request", String.valueOf(fetchApiData.putToDo(tempTodo, 4).getTitle())); // put works perfectly
-         //       Log.i("post request", String.valueOf(fetchApiData.postToDo(tempTodo).getTitle())); // post works perfectly
+//                for(ToDoModel obj : toDoModelList){
+//                    Log.i(Tag+" todo cha id", String.valueOf(obj.getId()));
+//                    Log.i(Tag+" todo cha title", String.valueOf(obj.getTitle()));
+//                    Log.i(Tag+" todo cha userId", String.valueOf(obj.getUserId()));
+//                    Log.i(Tag+" todo cha complted", String.valueOf(obj.getCompleted()));
+//                    Log.i(Tag+" todo cha dueDate", String.valueOf(obj.getDueDate()));
+//                }
+                setCustomAdapter(new CustomAdapterForUsers((ArrayList<UserModel>) getUserModelList(),context));
 
-//                fetchApiData.deleteToDo(4).getTitle(); // delete works perfectly
+                customAdapter = getCustomAdapter();
 
-                for(ToDoModel obj : toDoModelList){
-                    Log.i(Tag+" todo cha id", String.valueOf(obj.getId()));
-                    Log.i(Tag+" todo cha title", String.valueOf(obj.getTitle()));
-                    Log.i(Tag+" todo cha userId", String.valueOf(obj.getUserId()));
-                    Log.i(Tag+" todo cha complted", String.valueOf(obj.getCompleted()));
-                    Log.i(Tag+" todo cha dueDate", String.valueOf(obj.getDueDate()));
-                }
-
-                customAdapter = new CustomAdapterForUsers((ArrayList<UserModel>) userModelList,context);
-                listView = (ListView)findViewById(R.id.fullListViewUsers);
                 runOnUiThread(new Runnable() { // update adapter from main UI thread
                     @Override
                     public void run() {
                         listView.setAdapter(customAdapter);
-                        //@Bind(R.id.fullListView);
-
                         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                             @Override
                             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -123,9 +156,7 @@ public class MainActivity extends AppCompatActivity {
                                 customActionBar.setActionBarColor("#29993d");
                                 editUser.setVisibility(View.VISIBLE);
                                 deleteUser.setVisibility(View.VISIBLE);
-
-
-                                barTitle.setText(userModelList.get(position).getName());
+                                barTitle.setText(getUserModelList().get(position).getName());
 
                                 return true;
                             }
@@ -149,28 +180,28 @@ public class MainActivity extends AppCompatActivity {
                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                UserModel userModel = userModelList.get(position);
+
+                                UserModel userModel = getUserModelList().get(position);
+
                                 Integer userId = userModel.getId();
                                 String userName = userModel.getName();
                                 Log.i("fetched username",userName);
-                                toDoModelListbyId = new ArrayList<ToDoModel>();
-                                for(ToDoModel toDoModel : toDoModelList){ // ToDoModel object matching with clicked userId extracted and added to toDoModelListbyId
-                                    if(toDoModel.getUserId().equals(userId)){
-                                        Log.i("user id matched", toDoModel.getUserId().toString());
-                                        toDoModelListbyId.add(toDoModel);
+                                Log.i("fetched username", String.valueOf(userId));
+//                                toDoModelListbyId = new ArrayList<ToDoModel>();
+//                                for(ToDoModel toDoModel : toDoModelList){ // ToDoModel object matching with clicked userId extracted and added to toDoModelListbyId
+//                                    //if(toDoModel.getUserId().equals(userId)){
+//                                    if(toDoModel.getUserId() == userId){
+//                                        Log.i("user id matched", toDoModel.getUserId().toString());
+//                                        toDoModelListbyId.add(toDoModel);
+//                                    }
+//                                }
 
-                                    }
-                                }
-                               // toDoModelListbyId = fetchApiData.getTodoById(1); // call toDoList based on user clicked // not used to avoid making another thread to fetch data from api
-
-
-                                if(!toDoModelListbyId.isEmpty()) {
+                                if(!userName.isEmpty()) {
                                     Intent intent = new Intent(context, ToDoActivity.class);
                                     intent.putExtra("userId", userId);
                                     intent.putExtra("userName",userName);
-                                    // intent.putExtra("toDoModelList", (Serializable) toDoModelList);
-                                    //  intent.putParcelableArrayListExtra("toDoModelList", (ArrayList<? extends Parcelable>) toDoModelList);
-                                    intent.putParcelableArrayListExtra("toDoModelList", (ArrayList<? extends Parcelable>) toDoModelListbyId);
+
+                                //    intent.putParcelableArrayListExtra("toDoModelList", (ArrayList<? extends Parcelable>) toDoModelListbyId);
                                     startActivity(intent);
                                 }
                                 else
@@ -179,35 +210,22 @@ public class MainActivity extends AppCompatActivity {
                         });
                     } // end of run(UI thread
                 }); // end of run on UI thread
-
-
             }
-
         }).start();
-//        toDoModelList = fetchApiData.getToDoList();
-//        userModelList = fetchApiData.getUserList();
-
     }
-
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-       // getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0 ){
+            getFragmentManager().popBackStack();
+            listView.setVisibility(View.VISIBLE);
+            addUser.setVisibility(View.VISIBLE);
+
+        } else {
+            super.onBackPressed();
+        }
     }
-
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    public void onFragmentInteraction(Uri uri) {
 
-        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

@@ -19,13 +19,6 @@
     <include layout="@layout/content_main" />
 
 
-    <ListView
-        android:id="@+id/fullListViewUsers"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="10.0sp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"></ListView>
 
 
 </android.support.design.widget.CoordinatorLayout>

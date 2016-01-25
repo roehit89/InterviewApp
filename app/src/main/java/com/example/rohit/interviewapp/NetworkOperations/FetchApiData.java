@@ -66,6 +66,7 @@ public class FetchApiData {
 //            Log.i(Tag+" user result city", String.valueOf(eachObject.getAddress().getCity()));
 //            Log.i(Tag+" user result company", String.valueOf(eachObject.getCompany().getCompanyName()));
 //            Log.i(Tag+" user result latitute", String.valueOf(eachObject.getAddress().getGeo().getLat()));
+            Log.i(Tag+" user result id", String.valueOf(eachObject.getId()));
         }
         return userResultList;
     }
@@ -129,6 +130,20 @@ public class FetchApiData {
         Call <ToDoModel> call = client.deleteToDo(id);
         try{
             returnValue = call.execute().body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return returnValue;
+    }
+
+    public UserModel postUser(UserModel userModel){
+        bytemarkClient client = ServiceGenerator.createService(bytemarkClient.class);
+
+        Call<UserModel> call = client.postUser(userModel);
+        UserModel returnValue = null;
+        try{
+            returnValue = call.execute().body();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

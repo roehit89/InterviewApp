@@ -1,5 +1,6 @@
 package com.example.rohit.interviewapp.NetworkOperations;
 
+import android.hardware.usb.UsbRequest;
 import android.util.Log;
 
 import com.example.rohit.interviewapp.Model.ToDoModel;
@@ -128,6 +129,19 @@ public class FetchApiData {
         ToDoModel returnValue = null;
 
         Call <ToDoModel> call = client.deleteToDo(id);
+        try{
+            returnValue = call.execute().body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return returnValue;
+    }
+
+    public UserModel deleteUser(Integer id){
+        bytemarkClient client = ServiceGenerator.createService(bytemarkClient.class);
+        UserModel returnValue = null;
+
+        Call <UserModel> call = client.deleteUser(id);
         try{
             returnValue = call.execute().body();
         } catch (IOException e) {

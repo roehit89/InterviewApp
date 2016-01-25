@@ -1,7 +1,9 @@
 package com.example.rohit.interviewapp;
 
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -45,11 +47,17 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
     ImageButton deleteUser;
     ImageButton editUser;
     ImageButton navButton;
+    UserModel userModelToDelete = new UserModel();
 
     TextView barTitle = null;
 
+    int flag = 0;
+    int longPressFlag = 0;
+
     FragmentTransaction fragmentTransaction;
     UserFragment userFragment;
+
+
 
     public CustomAdapterForUsers getCustomAdapter() {
         return customAdapter;
@@ -109,15 +117,19 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
 
                 listView.setVisibility(View.GONE); /// hide view on clicks made on fragment don't reflect on activity
                 addUser.setVisibility(View.INVISIBLE);
+                editUser.setVisibility(View.INVISIBLE);
+                deleteUser.setVisibility(View.INVISIBLE);
             }
         });
+
+
 
         new Thread(new Runnable() {
 
             @Override
             public void run() {
                 // operations to be performed on a background thread
-          //      toDoModelList = fetchApiData.getToDoList();
+                toDoModelList = fetchApiData.getToDoList();
                 userModelList = fetchApiData.getUserList();
 
                 setUserModelList(userModelList);
@@ -151,12 +163,61 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
                         listView.setAdapter(customAdapter);
                         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                             @Override
-                            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
+                                longPressFlag = 1;
                                 customActionBar.setActionBarColor("#29993d");
                                 editUser.setVisibility(View.VISIBLE);
                                 deleteUser.setVisibility(View.VISIBLE);
                                 barTitle.setText(getUserModelList().get(position).getName());
+
+
+                                deleteUser.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        userModelToDelete = new UserModel();
+                                        Log.i("position", String.valueOf(position));
+                                        userModelToDelete = userModelList.get(position);
+                                        Log.i("to delete ", userModelToDelete.getName());
+
+
+                                        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                switch (which){
+                                                    case DialogInterface.BUTTON_POSITIVE:
+                                                        //Yes button clicked
+                                                        userModelList.remove(userModelToDelete);
+                                                        customAdapter.notifyDataSetChanged();
+                                                        new Thread(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                fetchApiData.deleteUser(userModelToDelete.getId());
+                                                            }
+                                                        }).start();
+                                                        editUser.setVisibility(View.INVISIBLE);
+                                                        deleteUser.setVisibility(View.INVISIBLE);
+                                                        // barTitle.setText("ToDo List");
+                                                        customActionBar.setActionBarColor("#831919");
+                                                        barTitle.setText("Interview app");
+                                                        break;
+
+                                                    case DialogInterface.BUTTON_NEGATIVE:
+                                                        //No button clicked
+                                                        break;
+                                                }
+                                            }
+                                        };
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                        builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                                                .setNegativeButton("No", dialogClickListener).show();
+
+                                    }
+                                });
+
+
+
+
 
                                 return true;
                             }
@@ -170,6 +231,8 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
                                // barTitle.setText("ToDo List");
                                 customActionBar.setActionBarColor("#831919");
                                 barTitle.setText("Interview app");
+
+                                longPressFlag = 0;
                             }
 
                             @Override
@@ -188,19 +251,21 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
                                 Log.i("fetched username",userName);
                                 Log.i("fetched username", String.valueOf(userId));
 //                                toDoModelListbyId = new ArrayList<ToDoModel>();
-//                                for(ToDoModel toDoModel : toDoModelList){ // ToDoModel object matching with clicked userId extracted and added to toDoModelListbyId
-//                                    //if(toDoModel.getUserId().equals(userId)){
+                                for(ToDoModel toDoModel : toDoModelList){ // ToDoModel object matching with clicked userId extracted and added to toDoModelListbyId
+                                    if(toDoModel.getUserId().equals(userId)){
 //                                    if(toDoModel.getUserId() == userId){
 //                                        Log.i("user id matched", toDoModel.getUserId().toString());
 //                                        toDoModelListbyId.add(toDoModel);
-//                                    }
-//                                }
+                                    flag = 1;
+                                    longPressFlag = 0;
+                                    }
+                                }
 
-                                if(!userName.isEmpty()) {
+                                if(flag == 1) {
                                     Intent intent = new Intent(context, ToDoActivity.class);
                                     intent.putExtra("userId", userId);
                                     intent.putExtra("userName",userName);
-
+                                    flag = 0;
                                 //    intent.putParcelableArrayListExtra("toDoModelList", (ArrayList<? extends Parcelable>) toDoModelListbyId);
                                     startActivity(intent);
                                 }
@@ -220,7 +285,16 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
             listView.setVisibility(View.VISIBLE);
             addUser.setVisibility(View.VISIBLE);
 
-        } else {
+        }
+        if(longPressFlag == 1){
+            editUser.setVisibility(View.INVISIBLE);
+            deleteUser.setVisibility(View.INVISIBLE);
+            // barTitle.setText("ToDo List");
+            customActionBar.setActionBarColor("#831919");
+            barTitle.setText("Interview app");
+
+        }
+        else {
             super.onBackPressed();
         }
     }

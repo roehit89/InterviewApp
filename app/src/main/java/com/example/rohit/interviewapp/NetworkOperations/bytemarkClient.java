@@ -44,6 +44,10 @@ public interface bytemarkClient {
     @DELETE("/todos/{id}")
     Call <ToDoModel> deleteToDo(@Path("id")Integer id);
 
+    @DELETE("/users/{id}")
+    Call <UserModel> deleteUser(@Path("id")Integer id);
+
+
     @POST("/users")
     Call <UserModel> postUser(@Body UserModel userModel);
 

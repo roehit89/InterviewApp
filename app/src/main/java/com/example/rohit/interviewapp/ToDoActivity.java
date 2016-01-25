@@ -35,7 +35,7 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
     ImageButton addUser;
     ImageButton deleteUser;
     ImageButton editUser;
-    DialogActions dialogActions;
+
     Context context;
     String userName;
     TextView barTitle = null;
@@ -135,7 +135,7 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
         }).start();
 
 
-        dialogActions = new DialogActions(context);
+
         addUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

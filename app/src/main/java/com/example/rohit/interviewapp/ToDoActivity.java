@@ -19,9 +19,12 @@ import android.widget.Toast;
 
 import com.example.rohit.interviewapp.Adapters.CustomAdapterForToDo;
 import com.example.rohit.interviewapp.Fragments.ToDoFragment;
+import com.example.rohit.interviewapp.Fragments.UserFragment;
 import com.example.rohit.interviewapp.Model.ToDoModel;
+import com.example.rohit.interviewapp.Model.UserModel;
 import com.example.rohit.interviewapp.NetworkOperations.FetchApiData;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -36,10 +39,11 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
     ListView listView;
     String Tag = "ToDoActivity";
     CustomActionBar customActionBar = new CustomActionBar();
-    ImageButton addUser;
+    static ImageButton addUser;
     ImageButton deleteUser;
     ImageButton editUser;
     Integer buttonsVisible = 0;
+    Integer maxId = 0;
 
     Context context;
     String userName;
@@ -48,10 +52,19 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
     public android.support.v7.app.ActionBar actionBar;
     FragmentTransaction fragmentTransaction;
     ToDoFragment toDoFragment;
+    ToDoFragment toDoFragmentEdit;
     String splitString[];
 
     FetchApiData fetchApiData = new FetchApiData();
+    ToDoModel todoModelToDelete = new ToDoModel();
 
+    public ArrayList<ToDoModel> getToDoModelListbyId() {
+        return this.toDoModelListbyId;
+    }
+
+    public void setToDoModelListbyId(ArrayList<ToDoModel> toDoModelListbyId) {
+        ToDoActivity.toDoModelListbyId = toDoModelListbyId;
+    }
 
     public CustomAdapterForToDo getCustomAdapter() {
         return this.customAdapter;
@@ -78,6 +91,29 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
         customAdapter.notifyDataSetChanged();
     }
 
+    public void updateUserModelList(ToDoModel toDoModel, Integer id){
+        toDoModelListbyId = getToDoModelListbyId();
+
+        ToDoModel updateModel = toDoModel;
+        updateModel.setId(id);
+
+        this.addUser.setVisibility(View.VISIBLE);
+
+        for(ToDoModel obj  : toDoModelListbyId){
+            if(obj.getId() == id){
+                toDoModelListbyId.remove(obj);
+                toDoModelListbyId.add(updateModel);
+                setToDoModelListbyId(toDoModelListbyId);
+
+                customAdapter = getCustomAdapter();
+                customAdapter.notifyDataSetChanged();
+
+
+//                customAdapter.notifyDataSetChanged();
+                break;
+            }
+        }
+    }
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -127,6 +163,8 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
                         toDoModelListbyId.add(toDoModel);
                     }
                 }
+                setToDoModelListbyId(toDoModelListbyId);
+
                 setCustomAdapter(new CustomAdapterForToDo(toDoModelListbyId, context));
                 customAdapter = getCustomAdapter();
                 customAdapter.notifyDataSetChanged();
@@ -150,7 +188,36 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
                         deleteUser.setVisibility(View.VISIBLE);
                         editUser.setVisibility(View.VISIBLE);
                         buttonsVisible = 1;
+                        Log.i("obj title selcted", String.valueOf(toDoModelListbyId.get(position).getTitle()));
                         Log.i("obj id", String.valueOf(toDoModelListbyId.get(position).getId()));
+                        todoModelToDelete = toDoModelListbyId.get(position); // fetch object to be deleted or edited
+
+
+                        editUser.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                toDoFragmentEdit = new ToDoFragment();
+                                Bundle bundle = new Bundle();
+                                //   bundle.putParcelable("object to delete", (Parcelable) userModelToDelete);
+
+                                //bundle.putParcelableArrayList("test",userModelToDelete);
+                                //bundle.putSerializable("object to delete", (Serializable) todoModelToDelete);
+                                bundle.putParcelable("object to delete",todoModelToDelete);
+
+                                toDoFragmentEdit.setArguments(bundle);
+
+                                fragmentTransaction = getFragmentManager().beginTransaction();
+                                fragmentTransaction.add(R.id.todo_fragmentContainer, toDoFragmentEdit);
+                                fragmentTransaction.addToBackStack(null);
+                                fragmentTransaction.commit();
+
+                                listView.setVisibility(View.GONE); /// hide view on clicks made on fragment don't reflect on activity
+                                addUser.setVisibility(View.INVISIBLE);
+                                editUser.setVisibility(View.INVISIBLE);
+                                deleteUser.setVisibility(View.INVISIBLE);
+                            }
+                        });
+
 
                         deleteUser.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -167,6 +234,13 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
                                                     public void run() {
                                                         fetchApiData.deleteToDo(toDoModelListbyId.get(position).getId());
 
+                                                        toDoModelList = (ArrayList<ToDoModel>) fetchApiData.getToDoList();
+                                                        maxId = 0;
+                                                        for(ToDoModel toDoModel : toDoModelList){
+                                                            if(toDoModel.getId()>maxId){
+                                                                maxId = toDoModel.getId();
+                                                            }
+                                                        }
 
                                                         runOnUiThread(new Runnable() {
                                                             @Override
@@ -216,7 +290,7 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
             @Override
             public void onClick(View v) {
 
-                Integer maxId = 0;
+                maxId = 0;
                 for(ToDoModel toDoModel : toDoModelList){
                     if(toDoModel.getId()>maxId){
                         maxId = toDoModel.getId();

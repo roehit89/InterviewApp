@@ -23,6 +23,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.rohit.interviewapp.Model.ToDoModel;
+import com.example.rohit.interviewapp.Model.UserModel;
 import com.example.rohit.interviewapp.NetworkOperations.FetchApiData;
 import com.example.rohit.interviewapp.R;
 import com.example.rohit.interviewapp.ToDoActivity;
@@ -54,12 +55,15 @@ public class ToDoFragment extends Fragment {
     private TextView todo_user_id;
     private TextView todo_title;
     Integer user_id_value;
-    private Boolean completed;
+    private String completed = "false";
     ImageButton addUser;
     ImageButton editUser;
     ToDoModel tempTodo = new ToDoModel();
     Integer toDoMaxId;
+    ToDoModel deleteObject = new ToDoModel();
+    Integer flag_edit = 0;
 
+    Activity activity;
     ListView listView;
     View view;
 
@@ -95,6 +99,7 @@ public class ToDoFragment extends Fragment {
 
         listView = (ListView) getActivity().findViewById(R.id.fullListViewToDo);
 
+        activity = getActivity();
       //  todo_user_id = (TextView) view.findViewById(R.id.todo_user_id);
         todo_title = (TextView)view.findViewById(R.id.todo_title);
 
@@ -112,10 +117,35 @@ public class ToDoFragment extends Fragment {
         editUser.setVisibility(View.INVISIBLE);
 
         if(getArguments()!=null) {
+            Log.i("some arguments set"," ");
             if (getArguments().get("toDoMaxId") != null) {
                 String temp = (String) getArguments().get("toDoMaxId");
                 toDoMaxId = Integer.parseInt(temp);
                 Log.i("userModelListLength", String.valueOf(toDoMaxId));
+            }else{
+//                //deleteObject = (ToDoModel) getArguments().getSerializable("object to delete");
+                deleteObject = getArguments().getParcelable("object to delete");
+                Log.i("object received", deleteObject.getTitle());
+                Log.i("object received", String.valueOf(deleteObject.getId())); ///////////////////// working fine.. object is passed here with id
+
+                flag_edit = 1;
+                todo_title.setText(deleteObject.getTitle());
+                String temp_date_time[] = deleteObject.getDueDate().split(" ");
+
+                date_id.setText(temp_date_time[0]);
+                time_id.setText(temp_date_time[1]);
+                Log.i("completed or not",deleteObject.getCompleted().toString());
+
+                if(deleteObject.getCompleted().equals("true")){
+                    switch_id.setChecked(true);
+                    switch_id.setText("Yes   ");
+                }
+                else{
+                    switch_id.setChecked(false);
+                    switch_id.setText("No   ");
+                }
+
+
             }
         }
 
@@ -123,12 +153,12 @@ public class ToDoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(switch_id.isChecked()){
-                    completed = true;
+                    completed = "true";
                     Log.i("switch value",completed.toString());
                     switch_id.setText("Yes   ");
                 }
                 else {
-                    completed = false;
+                    completed = "false";
                     Log.i("switch value",completed.toString());
                     switch_id.setText("No   ");
                 }
@@ -219,49 +249,56 @@ public class ToDoFragment extends Fragment {
                 {
                     todo_title.setError("field cannot be empyt");
                 }
-//                if(user_id_value.toString().isEmpty())
-//                {
-//                    todo_user_id.setError("field cannot be empyt");
-//                }
                 else {
-
-                    //final List<ToDoModel> toDoModelList = getActivity().getIntent().getParcelableArrayListExtra("toDoModelList");
-                    // Log.i("post request", String.valueOf(fetchApiData.postToDo(tempTodo).getTitle()));
                     tempTodo = new ToDoModel();
-
-                    //  tempTodo.setId(todo_id_value);
 
                     tempTodo.setId(toDoMaxId);
                     Log.i("obj id set", String.valueOf(tempTodo.getId()));
                     tempTodo.setTitle(title_value);
-                    //tempTodo.setCompleted(true);
-                    tempTodo.setCompleted(completed);
-                    // tempTodo.setDueDate("2016-03-21T12:22:45.000Z");
-                    tempTodo.setDueDate(todo_date + todo_time);
+                    tempTodo.setCompleted(String.valueOf(completed));
+                    tempTodo.setDueDate(todo_date +" "+ todo_time);
                     tempTodo.setUserId(user_id_value);
-                    ToDoActivity toDoActivity = new ToDoActivity();
 
-                    toDoActivity.addTotoDoModelList(tempTodo);
 
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            fetchApiData.postToDo(tempTodo);
+                    if(flag_edit == 0) {
+                        ToDoActivity toDoActivity = new ToDoActivity();
+                        toDoActivity.addTotoDoModelList(tempTodo);
 
-                            //toDoModelList.add(tempTodo);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                fetchApiData.postToDo(tempTodo);
+                            }
+                        }).start();
 
-//                        CustomAdapterForToDo customAdapter = new CustomAdapterForToDo(toDoModelList,getActivity().getWindow().getContext());
-//                        ListView listView = (ListView) view.findViewById(R.id.fullListViewToDo);
-//                        listView.setAdapter(customAdapter);
-                            // notifyAll();
+                        listView.setVisibility(View.VISIBLE);
+                        Toast.makeText(getActivity(), "Added to todo list", Toast.LENGTH_LONG).show();
 
-                        }
-                    }).start();
+                    }
+                    else{
 
-                    listView.setVisibility(View.VISIBLE);
-                  //  Log.i("clicked event fragmnt", String.valueOf(toDoModelList.size()));
-                    //Toast.makeText(getActivity().getWindow().getContext(), "Added to todo list", Toast.LENGTH_LONG).show();
-                    Toast.makeText(getActivity(), "Added to todo list", Toast.LENGTH_LONG).show();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                flag_edit = 0;
+                                Log.i("delete obj id", String.valueOf(deleteObject.getId()));
+
+                                fetchApiData.putToDo(tempTodo, deleteObject.getId());
+                                Log.i("todo edited", " edited");
+
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ToDoActivity toDoActivity = new ToDoActivity();
+                                    toDoActivity.updateUserModelList(tempTodo, deleteObject.getId());
+
+                                    listView.setVisibility(View.VISIBLE);
+                                    Toast.makeText(activity.getApplicationContext(), "User updated ", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            }
+                        }).start();
+                    }
                     getActivity().getFragmentManager().popBackStack();
 
 

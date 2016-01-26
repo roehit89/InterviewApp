@@ -66,8 +66,6 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
 
         this.addUser.setVisibility(View.VISIBLE);
 
-
-
         for(UserModel obj  : userModelList){
             if(obj.getId() == id){
                 userModelList.remove(obj);

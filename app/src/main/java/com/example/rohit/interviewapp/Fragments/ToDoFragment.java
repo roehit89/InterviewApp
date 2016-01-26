@@ -56,7 +56,9 @@ public class ToDoFragment extends Fragment {
     Integer user_id_value;
     private Boolean completed;
     ImageButton addUser;
+    ImageButton editUser;
     ToDoModel tempTodo = new ToDoModel();
+    Integer toDoMaxId;
 
     ListView listView;
     View view;
@@ -99,10 +101,23 @@ public class ToDoFragment extends Fragment {
         switch_id = (Switch) view.findViewById(R.id.switch_id);
         date_id = (TextView) view.findViewById(R.id.date_id);
         time_id = (TextView) view.findViewById(R.id.time_id);
+
         add_Button = (TextView) view.findViewById(R.id.add_Button_todo);
         cancel_Button = (TextView) view.findViewById(R.id.cancel_Button_todo);
 
-        addUser = (ImageButton) view.findViewById(R.id.addButtonId);
+        addUser = (ImageButton) getActivity().findViewById(R.id.addButtonId);
+        editUser = (ImageButton) getActivity().findViewById(R.id.editButtonId);
+
+        addUser.setVisibility(View.INVISIBLE);
+        editUser.setVisibility(View.INVISIBLE);
+
+        if(getArguments()!=null) {
+            if (getArguments().get("toDoMaxId") != null) {
+                String temp = (String) getArguments().get("toDoMaxId");
+                toDoMaxId = Integer.parseInt(temp);
+                Log.i("userModelListLength", String.valueOf(toDoMaxId));
+            }
+        }
 
         switch_id.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +154,7 @@ public class ToDoFragment extends Fragment {
                             time_id.setError("Invalid date fdjska;fj sa;fjdka;fjdksa;f jdksa; fjdksa"); /// doesn't work for some reason.
                         }
                         else {
-                            time_id.setText(selectedHour + ":" + selectedMinute);
+                            time_id.setText(selectedHour + ":" + selectedMinute + ":"+ "00");
                             time_id.setError(null);
                         }
                     }
@@ -181,6 +196,8 @@ public class ToDoFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                addUser.setVisibility(View.VISIBLE);
+
                 final String title_value = String.valueOf(todo_title.getText());
                // String temp = todo_user_id.getText().toString();
                // if(!temp.isEmpty()) {
@@ -214,6 +231,8 @@ public class ToDoFragment extends Fragment {
 
                     //  tempTodo.setId(todo_id_value);
 
+                    tempTodo.setId(toDoMaxId);
+                    Log.i("obj id set", String.valueOf(tempTodo.getId()));
                     tempTodo.setTitle(title_value);
                     //tempTodo.setCompleted(true);
                     tempTodo.setCompleted(completed);

@@ -65,6 +65,7 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
 
     public void addTotoDoModelList(ToDoModel toDoModel)
     {
+     //   toDoModelListbyId.clear();
         toDoModelListbyId = getToDoModelList();
         toDoModelListbyId.add(toDoModel);
         customAdapter = getCustomAdapter();
@@ -111,7 +112,9 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
             @Override
             public void run() {
                 toDoModelList = (ArrayList<ToDoModel>) fetchApiData.getToDoList();
-
+                if(!toDoModelListbyId.isEmpty()) {
+                    toDoModelListbyId.clear();
+                }
                 for(ToDoModel toDoModel : toDoModelList){ // ToDoModel object matching with clicked userId extracted and added to toDoModelListbyId
                     if(toDoModel.getUserId() == userId){
                         Log.i("user id matched", toDoModel.getUserId().toString());

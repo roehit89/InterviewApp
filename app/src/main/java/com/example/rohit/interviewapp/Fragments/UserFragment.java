@@ -12,8 +12,10 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.rohit.interviewapp.Adapters.CustomAdapterForUsers;
+import com.example.rohit.interviewapp.CustomActionBar;
 import com.example.rohit.interviewapp.MainActivity;
 import com.example.rohit.interviewapp.Model.UserModel;
 import com.example.rohit.interviewapp.NetworkOperations.FetchApiData;
@@ -55,15 +57,25 @@ public class UserFragment extends Fragment {
     private String catchPhrase;
     private String bs;
 
+    int flag_edit = 0;
+    Integer userModelListLength = 0;
     View view;
+    private ListView listView;
 
     UserModel userModel = new UserModel();
+    UserModel deleteObject = new UserModel();
+    MainActivity mainActivity = new MainActivity();
+
+    TextView barTitle = null;
+    CustomActionBar customActionBar = new CustomActionBar();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_user, container, false);
+
+        listView = (ListView)getActivity().findViewById(R.id.fullListViewUsers);
 
         cancel_button = (Button) view.findViewById(R.id.cancel_Button_user);
         add_button= (Button) view.findViewById(R.id.add_Button_user); // add button for adding user details.
@@ -89,9 +101,45 @@ public class UserFragment extends Fragment {
         final TextView user_user_company_bs = (TextView) view.findViewById(R.id.user_company_bs);
 
 
+        if(getArguments()!=null) {
+            if (getArguments().get("userModelListLength") != null) {
+                String temp = (String) getArguments().get("userModelListLength");
+                userModelListLength = Integer.parseInt(temp);
+                Log.i("userModelListLength", String.valueOf(userModelListLength));
+            } else {
+
+            deleteObject = (UserModel) getArguments().getSerializable("object to delete");
+
+
+
+            flag_edit = 1;
+
+            user_name.setText(deleteObject.getName());
+            user_userName.setText(deleteObject.getUserName());
+            user_user_email.setText(deleteObject.getEmail());
+            user_phone.setText(deleteObject.getPhone());
+            user_website.setText(deleteObject.getWebsite());
+
+            user_user_street.setText(deleteObject.getAddress().getStreet());
+            user_user_suit.setText(deleteObject.getAddress().getSuite());
+            user_user_city.setText(deleteObject.getAddress().getCity());
+            user_user_zipcode.setText(deleteObject.getAddress().getZipCode());
+
+            user_user_lat.setText(deleteObject.getAddress().getGeo().getLat());
+            user_user_long.setText(deleteObject.getAddress().getGeo().getLng());
+
+        }
+
+        }
+       // Log.i("delete object",deleteObject.getName()+" "+deleteObject.getEmail());
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                add_button.setClickable(false);
+                cancel_button.setClickable(false);
+                userModel.setId(userModelListLength);
+                Log.i("object id added", String.valueOf(userModel.getId()));
                 Log.i("user_name", user_name.getText().toString());
                 userModel.setName(user_name.getText().toString());
                 userModel.setUserName(user_userName.getText().toString());
@@ -133,9 +181,9 @@ public class UserFragment extends Fragment {
 
                 userModel.setCompany(company);
 
-                MainActivity mainActivity = new MainActivity();
+                mainActivity = new MainActivity();
 
-                mainActivity.addToUserModelList(userModel); // adds object to UserModelList. The same list used for UserAdapter
+              //  mainActivity.addToUserModelList(userModel); // adds object to UserModelList. The same list used for UserAdapter
 //                List<UserModel>userModelList = mainActivity.getUserModelList();
 //
 //                userModelList.add(userModel);
@@ -145,11 +193,56 @@ public class UserFragment extends Fragment {
 //
 //                customAdapter.notifyDataSetChanged();
 
+
+       //         barTitle = (TextView) view.findViewById(R.id.textViewTitle);
+
+               // customActionBar.setActionBarColor("#831919");
+     //           barTitle.setText("Interview app");
+
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         FetchApiData fetchApiData = new FetchApiData();
-                        fetchApiData.postUser(userModel);
+                        if(flag_edit == 1){
+                            flag_edit = 0;
+                            fetchApiData.putUser(userModel, deleteObject.getId());
+                            Log.i("user edited", "user edited");
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mainActivity.updateUserModelList(userModel, deleteObject.getId());
+                                    listView.setVisibility(View.VISIBLE);
+                                    Toast.makeText(getActivity().getApplicationContext(),"User updated ",Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+
+                         //   Toast.makeText(getActivity(), "User edited", Toast.LENGTH_LONG).show();
+                            //if(flag_edit == 1){
+
+                           // }
+
+                            getActivity().getFragmentManager().popBackStack();
+
+
+                        }
+                        else {
+                            fetchApiData.postUser(userModel);
+                            mainActivity.addToUserModelList(userModel); // adds object to UserModelList. The same list used for UserAdapter
+                            Log.i("user added", "user added");
+
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    listView.setVisibility(View.VISIBLE);
+                                    Toast.makeText(getActivity().getApplicationContext(),"User edited",Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                         //   Toast.makeText(getActivity(), "Added", Toast.LENGTH_LONG).show();
+                            getActivity().getFragmentManager().popBackStack();
+                        }
                     }
                 }).start();
 

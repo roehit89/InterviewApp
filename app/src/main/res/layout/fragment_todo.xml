@@ -11,7 +11,7 @@
             android:orientation="vertical"
             android:layout_marginLeft="10dp">
 
-            <TextView
+            <!--TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
@@ -20,7 +20,7 @@
                 android:gravity="center_horizontal"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="10dp"
-                android:textAlignment="textStart" />
+                android:textAlignment="textStart" /-->
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -60,12 +60,12 @@
             android:orientation="vertical"
             android:layout_marginRight="10dp">
 
-            <EditText
+            <!--EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:ems="10"
-                android:id="@+id/todo_user_id" />
+                android:id="@+id/todo_user_id" /-->
 
             <EditText
                 android:layout_width="match_parent"

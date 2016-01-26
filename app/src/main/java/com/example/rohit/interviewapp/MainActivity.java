@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -24,7 +25,9 @@ import com.example.rohit.interviewapp.Model.ToDoModel;
 import com.example.rohit.interviewapp.Model.UserModel;
 import com.example.rohit.interviewapp.NetworkOperations.FetchApiData;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -37,13 +40,13 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
     List<ToDoModel> toDoModelListbyId;
     static List<UserModel>userModelList;
 
-    private CustomAdapterForUsers customAdapter;
+    private static CustomAdapterForUsers customAdapter;
     String Tag = "MainActivity";
     Context context = null;
     private ListView listView;
     ToDoModel tempTodo = new ToDoModel();
     CustomActionBar customActionBar = new CustomActionBar();
-    ImageButton addUser;
+    static ImageButton addUser;
     ImageButton deleteUser;
     ImageButton editUser;
     ImageButton navButton;
@@ -57,10 +60,31 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
     FragmentTransaction fragmentTransaction;
     UserFragment userFragment;
 
+    public void updateUserModelList(UserModel userModel, Integer id){
+     userModelList = getUserModelList();
+     UserModel updateModel = userModel;
 
+        this.addUser.setVisibility(View.VISIBLE);
+
+
+
+        for(UserModel obj  : userModelList){
+            if(obj.getId() == id){
+                userModelList.remove(obj);
+                userModelList.add(updateModel);
+                setUserModelList(userModelList);
+                customAdapter = getCustomAdapter();
+                customAdapter.notifyDataSetChanged();
+
+
+//                customAdapter.notifyDataSetChanged();
+                break;
+            }
+        }
+    }
 
     public CustomAdapterForUsers getCustomAdapter() {
-        return customAdapter;
+        return this.customAdapter;
     }
 
     public void setCustomAdapter(CustomAdapterForUsers customAdapter) {
@@ -105,11 +129,22 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
         editUser.setVisibility(View.INVISIBLE);
         deleteUser.setVisibility(View.INVISIBLE);
 
+
         addUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("button clicked"," button clicked");
+                Integer max = 0;
+                for(UserModel userModel : userModelList)
+                {
+                    if(userModel.getId()>max) max = userModel.getId();
+                }
+                Log.i("button clicked", " button clicked");
+                Bundle bundle = new Bundle();
+                bundle.putString("userModelListLength", String.valueOf(max + 1));
+
                 userFragment = new UserFragment();
+                userFragment.setArguments(bundle);
+
                 fragmentTransaction = getFragmentManager().beginTransaction();
                 fragmentTransaction.add(R.id.user_fragmentContainer, userFragment);
                 fragmentTransaction.addToBackStack(null);
@@ -171,15 +206,42 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
                                 deleteUser.setVisibility(View.VISIBLE);
                                 barTitle.setText(getUserModelList().get(position).getName());
 
+                                userModelToDelete = new UserModel();
+                                Log.i("position", String.valueOf(position));
+                                userModelToDelete = userModelList.get(position); // fetch object to be deleted or edited
+                                Log.i("to delete ", userModelToDelete.getName() + " object id" + userModelToDelete.getId());
+
+
+
+                                editUser.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        userFragment = new UserFragment();
+                                        Bundle bundle = new Bundle();
+                                     //   bundle.putParcelable("object to delete", (Parcelable) userModelToDelete);
+
+                                        //bundle.putParcelableArrayList("test",userModelToDelete);
+                                        bundle.putSerializable("object to delete", userModelToDelete);
+
+
+
+                                        userFragment.setArguments(bundle);
+
+                                        fragmentTransaction = getFragmentManager().beginTransaction();
+                                        fragmentTransaction.add(R.id.user_fragmentContainer, userFragment);
+                                        fragmentTransaction.addToBackStack(null);
+                                        fragmentTransaction.commit();
+
+                                        listView.setVisibility(View.GONE); /// hide view on clicks made on fragment don't reflect on activity
+                                        addUser.setVisibility(View.INVISIBLE);
+                                        editUser.setVisibility(View.INVISIBLE);
+                                        deleteUser.setVisibility(View.INVISIBLE);
+                                    }
+                                });
 
                                 deleteUser.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        userModelToDelete = new UserModel();
-                                        Log.i("position", String.valueOf(position));
-                                        userModelToDelete = userModelList.get(position);
-                                        Log.i("to delete ", userModelToDelete.getName());
-
 
                                         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                                             @Override
@@ -187,19 +249,31 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
                                                 switch (which){
                                                     case DialogInterface.BUTTON_POSITIVE:
                                                         //Yes button clicked
-                                                        userModelList.remove(userModelToDelete);
-                                                        customAdapter.notifyDataSetChanged();
                                                         new Thread(new Runnable() {
                                                             @Override
                                                             public void run() {
                                                                 fetchApiData.deleteUser(userModelToDelete.getId());
+
+                                                                runOnUiThread(new Runnable() {
+                                                                    @Override
+                                                                    public void run() {
+                                                                        userModelList.remove(userModelToDelete);
+                                                                        customAdapter.notifyDataSetChanged();
+                                                                        addUser.setVisibility(View.VISIBLE);
+
+                                                                    }
+                                                                });
                                                             }
                                                         }).start();
+
+
+
                                                         editUser.setVisibility(View.INVISIBLE);
                                                         deleteUser.setVisibility(View.INVISIBLE);
                                                         // barTitle.setText("ToDo List");
                                                         customActionBar.setActionBarColor("#831919");
                                                         barTitle.setText("Interview app");
+                                                        Toast.makeText(context,"User deleted",Toast.LENGTH_SHORT).show();
                                                         break;
 
                                                     case DialogInterface.BUTTON_NEGATIVE:

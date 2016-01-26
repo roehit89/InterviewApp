@@ -93,7 +93,7 @@ public class ToDoFragment extends Fragment {
 
         listView = (ListView) getActivity().findViewById(R.id.fullListViewToDo);
 
-        todo_user_id = (TextView) view.findViewById(R.id.todo_user_id);
+      //  todo_user_id = (TextView) view.findViewById(R.id.todo_user_id);
         todo_title = (TextView)view.findViewById(R.id.todo_title);
 
         switch_id = (Switch) view.findViewById(R.id.switch_id);
@@ -228,6 +228,7 @@ public class ToDoFragment extends Fragment {
                         @Override
                         public void run() {
                             fetchApiData.postToDo(tempTodo);
+
                             //toDoModelList.add(tempTodo);
 
 //                        CustomAdapterForToDo customAdapter = new CustomAdapterForToDo(toDoModelList,getActivity().getWindow().getContext());

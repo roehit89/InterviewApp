@@ -41,6 +41,10 @@ public interface bytemarkClient {
     @PUT("/todos/{id}")
     Call <ToDoModel> putToDo(@Path("id") Integer id, @Body ToDoModel toDoModel);
 
+    @PUT("/users/{id}")
+    Call <UserModel> putUser(@Path("id") Integer id, @Body UserModel userModel);
+
+
     @DELETE("/todos/{id}")
     Call <ToDoModel> deleteToDo(@Path("id")Integer id);
 
@@ -50,5 +54,7 @@ public interface bytemarkClient {
 
     @POST("/users")
     Call <UserModel> postUser(@Body UserModel userModel);
+
+
 
 }

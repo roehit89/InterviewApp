@@ -1,11 +1,12 @@
 package com.example.rohit.interviewapp.Model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Rohit on 1/15/2016.
  */
-public class UserModel {
+public class UserModel implements Serializable {
 
     private int id;
     private String name;
@@ -42,7 +43,7 @@ public class UserModel {
     }
 
     public void setId(int id) {
-        id = id;
+        this.id = id;
     }
 
     public String getName() {
@@ -54,7 +55,7 @@ public class UserModel {
     }
 
     public String getUserName() {
-        return userName;
+        return this.userName;
     }
 
     public void setUserName(String userName) {

@@ -124,6 +124,19 @@ public class FetchApiData {
         return returnValue;
     }
 
+    public UserModel putUser(UserModel userModel,Integer id){
+        bytemarkClient client = ServiceGenerator.createService(bytemarkClient.class);
+        UserModel returnValue = null;
+        Call<UserModel> call = client.putUser(id, userModel);
+        try{
+            returnValue = call.execute().body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return returnValue;
+    }
+
+
     public ToDoModel deleteToDo(Integer id){
         bytemarkClient client = ServiceGenerator.createService(bytemarkClient.class);
         ToDoModel returnValue = null;
@@ -140,7 +153,7 @@ public class FetchApiData {
     public UserModel deleteUser(Integer id){
         bytemarkClient client = ServiceGenerator.createService(bytemarkClient.class);
         UserModel returnValue = null;
-
+        Log.i("delete user called","object id "+id);
         Call <UserModel> call = client.deleteUser(id);
         try{
             returnValue = call.execute().body();
@@ -149,6 +162,7 @@ public class FetchApiData {
         }
         return returnValue;
     }
+
 
     public UserModel postUser(UserModel userModel){
         bytemarkClient client = ServiceGenerator.createService(bytemarkClient.class);
@@ -163,4 +177,5 @@ public class FetchApiData {
         }
         return returnValue;
     }
+
 }

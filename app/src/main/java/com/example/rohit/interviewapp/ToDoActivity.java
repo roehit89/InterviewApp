@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -19,12 +18,9 @@ import android.widget.Toast;
 
 import com.example.rohit.interviewapp.Adapters.CustomAdapterForToDo;
 import com.example.rohit.interviewapp.Fragments.ToDoFragment;
-import com.example.rohit.interviewapp.Fragments.UserFragment;
 import com.example.rohit.interviewapp.Model.ToDoModel;
-import com.example.rohit.interviewapp.Model.UserModel;
 import com.example.rohit.interviewapp.NetworkOperations.FetchApiData;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -108,8 +104,6 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
                 customAdapter = getCustomAdapter();
                 customAdapter.notifyDataSetChanged();
 
-
-//                customAdapter.notifyDataSetChanged();
                 break;
             }
         }
@@ -126,7 +120,6 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
         editUser = (ImageButton) findViewById(R.id.editButtonId);
         navButton = (ImageButton) findViewById(R.id.navButtonId);
 
-
         navButton.setVisibility(View.VISIBLE);
 
         Resources resources = this.getResources();
@@ -140,12 +133,12 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
 
 
         userId = getIntent().getIntExtra("userId",-1);
-        Log.i("alela userid", String.valueOf(userId));
+        Log.i("received userid", String.valueOf(userId));
 
         userName = getIntent().getExtras().getString("userName");
 
         splitString = userName.split("\\s+");
-        Log.i("fetched username in todo",userName);
+        Log.i("fetched usrname in todo",userName);
 
         barTitle = (TextView) findViewById(R.id.textViewTitle);
         barTitle.setText(splitString[0] + "'s to do list");
@@ -169,18 +162,16 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
                 customAdapter = getCustomAdapter();
                 customAdapter.notifyDataSetChanged();
 
+                setToDoModelList(toDoModelListbyId);
 
-        setToDoModelList(toDoModelListbyId);
+                listView = (ListView) findViewById(R.id.fullListViewToDo);
 
-        listView = (ListView) findViewById(R.id.fullListViewToDo);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                    listView.setAdapter(customAdapter);
 
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                listView.setAdapter(customAdapter);
-
-                listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
@@ -195,13 +186,10 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
 
                         editUser.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onClick(View v) {
+                                public void onClick(View v) {
                                 toDoFragmentEdit = new ToDoFragment();
                                 Bundle bundle = new Bundle();
-                                //   bundle.putParcelable("object to delete", (Parcelable) userModelToDelete);
 
-                                //bundle.putParcelableArrayList("test",userModelToDelete);
-                                //bundle.putSerializable("object to delete", (Serializable) todoModelToDelete);
                                 bundle.putParcelable("object to delete",todoModelToDelete);
 
                                 toDoFragmentEdit.setArguments(bundle);
@@ -255,18 +243,13 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
                                                 }).start();
 
 
-
-                                               // editUser.setVisibility(View.INVISIBLE);
-                                               // deleteUser.setVisibility(View.INVISIBLE);
-                                                // barTitle.setText("ToDo List");
-                                               // customActionBar.setActionBarColor("#831919");
-                                                barTitle.setText(splitString[0] + "'s to do list");
-                                                Toast.makeText(context, "Todo deleted", Toast.LENGTH_SHORT).show();
-                                                break;
+                                            barTitle.setText(splitString[0] + "'s to do list");
+                                            Toast.makeText(context, "Todo deleted", Toast.LENGTH_SHORT).show();
+                                            break;
 
                                             case DialogInterface.BUTTON_NEGATIVE:
-                                                //No button clicked
-                                                break;
+                                            //No button clicked
+                                            break;
                                         }
                                     }
                                 };

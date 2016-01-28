@@ -39,24 +39,6 @@ public class UserFragment extends Fragment {
     Button add_button;
     ImageButton addUser;
 
-    private String name;
-    private String userName;
-    private String email;
-    private String phone;
-    private String website;
-
-    private String street;
-    private String suite;
-    private String city;
-    private String zipCode;
-
-    private String lat;
-    private String lng;
-
-    private String companyName;
-    private String catchPhrase;
-    private String bs;
-
     int flag_edit = 0;
     Integer userModelListLength = 0;
     View view;
@@ -68,6 +50,24 @@ public class UserFragment extends Fragment {
 
     TextView barTitle = null;
     CustomActionBar customActionBar = new CustomActionBar();
+
+    TextView user_name;
+    TextView user_userName;
+    TextView user_user_email;
+    TextView user_phone;
+    TextView user_website;
+
+    TextView user_user_street;
+    TextView user_user_suit;
+    TextView user_user_city;
+    TextView user_user_zipcode;
+
+    TextView user_user_lat;
+    TextView user_user_long;
+
+    TextView user_user_company_name;
+    TextView user_user_company_catchphrase;
+    TextView user_user_company_bs;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,23 +82,23 @@ public class UserFragment extends Fragment {
 
         addUser = (ImageButton) view.findViewById(R.id.addButtonId);
 
-        final TextView user_name = (TextView) view.findViewById(R.id.user_name);
-        final TextView user_userName = (TextView) view.findViewById(R.id.user_userName);
-        final TextView user_user_email = (TextView) view.findViewById(R.id.user_email);
-        final TextView user_phone = (TextView) view.findViewById(R.id.user_phone);
-        final TextView user_website = (TextView) view.findViewById(R.id.user_website);
+        user_name = (TextView) view.findViewById(R.id.user_name);
+        user_userName = (TextView) view.findViewById(R.id.user_userName);
+        user_user_email = (TextView) view.findViewById(R.id.user_email);
+        user_phone = (TextView) view.findViewById(R.id.user_phone);
+        user_website = (TextView) view.findViewById(R.id.user_website);
 
-        final TextView user_user_street = (TextView) view.findViewById(R.id.user_street);
-        final TextView user_user_suit = (TextView) view.findViewById(R.id.user_suit);
-        final TextView user_user_city = (TextView) view.findViewById(R.id.user_city);
-        final TextView user_user_zipcode = (TextView) view.findViewById(R.id.user_zipcode);
+        user_user_street = (TextView) view.findViewById(R.id.user_street);
+        user_user_suit = (TextView) view.findViewById(R.id.user_suit);
+        user_user_city = (TextView) view.findViewById(R.id.user_city);
+        user_user_zipcode = (TextView) view.findViewById(R.id.user_zipcode);
 
-        final TextView user_user_lat = (TextView) view.findViewById(R.id.user_lat);
-        final TextView user_user_long = (TextView) view.findViewById(R.id.user_long);
+        user_user_lat = (TextView) view.findViewById(R.id.user_lat);
+        user_user_long = (TextView) view.findViewById(R.id.user_long);
 
-        final TextView user_user_company_name = (TextView) view.findViewById(R.id.user_company_name);
-        final TextView user_user_company_catchphrase = (TextView) view.findViewById(R.id.user_company_catchphrase);
-        final TextView user_user_company_bs = (TextView) view.findViewById(R.id.user_company_bs);
+        user_user_company_name = (TextView) view.findViewById(R.id.user_company_name);
+        user_user_company_catchphrase = (TextView) view.findViewById(R.id.user_company_catchphrase);
+        user_user_company_bs = (TextView) view.findViewById(R.id.user_company_bs);
 
 
         if(getArguments()!=null) {
@@ -106,30 +106,27 @@ public class UserFragment extends Fragment {
                 String temp = (String) getArguments().get("userModelListLength");
                 userModelListLength = Integer.parseInt(temp);
                 Log.i("userModelListLength", String.valueOf(userModelListLength));
-            } else {
+            }
+            else{
 
-            deleteObject = (UserModel) getArguments().getSerializable("object to delete");
+                deleteObject = (UserModel) getArguments().getSerializable("object to delete");
+                flag_edit = 1;
 
+                user_name.setText(deleteObject.getName());
+                user_userName.setText(deleteObject.getUserName());
+                user_user_email.setText(deleteObject.getEmail());
+                user_phone.setText(deleteObject.getPhone());
+                user_website.setText(deleteObject.getWebsite());
 
+                user_user_street.setText(deleteObject.getAddress().getStreet());
+                user_user_suit.setText(deleteObject.getAddress().getSuite());
+                user_user_city.setText(deleteObject.getAddress().getCity());
+                user_user_zipcode.setText(deleteObject.getAddress().getZipCode());
 
-            flag_edit = 1;
+                user_user_lat.setText(deleteObject.getAddress().getGeo().getLat());
+                user_user_long.setText(deleteObject.getAddress().getGeo().getLng());
 
-            user_name.setText(deleteObject.getName());
-            user_userName.setText(deleteObject.getUserName());
-            user_user_email.setText(deleteObject.getEmail());
-            user_phone.setText(deleteObject.getPhone());
-            user_website.setText(deleteObject.getWebsite());
-
-            user_user_street.setText(deleteObject.getAddress().getStreet());
-            user_user_suit.setText(deleteObject.getAddress().getSuite());
-            user_user_city.setText(deleteObject.getAddress().getCity());
-            user_user_zipcode.setText(deleteObject.getAddress().getZipCode());
-
-            user_user_lat.setText(deleteObject.getAddress().getGeo().getLat());
-            user_user_long.setText(deleteObject.getAddress().getGeo().getLng());
-
-        }
-
+            }
         }
        // Log.i("delete object",deleteObject.getName()+" "+deleteObject.getEmail());
         add_button.setOnClickListener(new View.OnClickListener() {
@@ -152,23 +149,12 @@ public class UserFragment extends Fragment {
                 UserModel.Address address = userModel.new Address();
                 UserModel.Address.Geo geo = address.new Geo();
 
-//                company.setCompanyName("test company");
-//                userModel.setCompany(company);
-
-//                geo.setLng("1111111");
-//                geo.setLat("11111111");
-//                address.setGeo(geo);
-//                userModel.setAddress(address);
-
-                //userModel.setCompany(new UserModel.Company().setCompanyName());
-
                 address.setStreet(user_user_street.getText().toString());
                 address.setSuite(user_user_suit.getText().toString());
                 address.setCity(user_user_city.getText().toString());
                 address.setZipCode(user_user_zipcode.getText().toString());
 
-                //userModel.setCompany(company);
-//
+
                 geo.setLat(user_user_lat.getText().toString());
                 geo.setLng(user_user_long.getText().toString());
 
@@ -182,23 +168,6 @@ public class UserFragment extends Fragment {
                 userModel.setCompany(company);
 
                 mainActivity = new MainActivity();
-
-              //  mainActivity.addToUserModelList(userModel); // adds object to UserModelList. The same list used for UserAdapter
-//                List<UserModel>userModelList = mainActivity.getUserModelList();
-//
-//                userModelList.add(userModel);
-//                ListView listView = (ListView)view.findViewById(R.id.fullListViewUsers);
-//
-//                CustomAdapterForUsers customAdapter = mainActivity.getCustomAdapter();
-//
-//                customAdapter.notifyDataSetChanged();
-
-
-       //         barTitle = (TextView) view.findViewById(R.id.textViewTitle);
-
-               // customActionBar.setActionBarColor("#831919");
-     //           barTitle.setText("Interview app");
-
 
                 new Thread(new Runnable() {
                     @Override
@@ -217,15 +186,7 @@ public class UserFragment extends Fragment {
                                 }
                             });
 
-
-                         //   Toast.makeText(getActivity(), "User edited", Toast.LENGTH_LONG).show();
-                            //if(flag_edit == 1){
-
-                           // }
-
                             getActivity().getFragmentManager().popBackStack();
-
-
                         }
                         else {
                             fetchApiData.postUser(userModel);
@@ -236,17 +197,14 @@ public class UserFragment extends Fragment {
                                 @Override
                                 public void run() {
                                     listView.setVisibility(View.VISIBLE);
-                                    Toast.makeText(getActivity().getApplicationContext(),"User edited",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity().getApplicationContext(),"User added",Toast.LENGTH_SHORT).show();
                                 }
                             });
 
-                         //   Toast.makeText(getActivity(), "Added", Toast.LENGTH_LONG).show();
                             getActivity().getFragmentManager().popBackStack();
                         }
                     }
                 }).start();
-
-
             }
         });
 
@@ -258,7 +216,6 @@ public class UserFragment extends Fragment {
 
                 ListView listView = (ListView)getActivity().findViewById(R.id.fullListViewUsers);
                 listView.setVisibility(View.VISIBLE);
-//                addUser.setVisibility(View.VISIBLE);
             }
         });
 

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -25,12 +26,12 @@ import com.example.rohit.interviewapp.Model.ToDoModel;
 import com.example.rohit.interviewapp.Model.UserModel;
 import com.example.rohit.interviewapp.NetworkOperations.FetchApiData;
 
-import java.io.Serializable;
+
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements UserFragment.OnFragmentInteractionListener {
@@ -52,7 +53,9 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
     ImageButton navButton;
     UserModel userModelToDelete = new UserModel();
 
+   // @Bind(R.id.textViewTitle) TextView barTitle;
     TextView barTitle = null;
+    Toolbar toolbar = null;
 
     int flag = 0;
     int longPressFlag = 0;
@@ -73,9 +76,6 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
                 setUserModelList(userModelList);
                 customAdapter = getCustomAdapter();
                 customAdapter.notifyDataSetChanged();
-
-
-//                customAdapter.notifyDataSetChanged();
                 break;
             }
         }
@@ -101,20 +101,20 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
     public void addToUserModelList(UserModel userModel)
     {
         getUserModelList().add(userModel);
-
-//        getCustomAdapter().notifyDataSetChanged();
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         context = this;
         customActionBar.customActionBar(getSupportActionBar(), context);
 
+
+       // @Bind(R.id.textViewTitle) barTitle;
         barTitle = (TextView) findViewById(R.id.textViewTitle);
         addUser = (ImageButton) findViewById(R.id.addButtonId);
         deleteUser = (ImageButton) findViewById(R.id.deleteButtonId);
@@ -162,8 +162,23 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
             @Override
             public void run() {
                 // operations to be performed on a background thread
+
                 toDoModelList = fetchApiData.getToDoList();
                 userModelList = fetchApiData.getUserList();
+
+                if(toDoModelList == null)
+                while (toDoModelList!= null)
+                {
+                    Log.i("fetching to do list"," found null");
+                    toDoModelList = fetchApiData.getToDoList();
+                }
+
+                if(userModelList == null)
+                    while (userModelList!= null)
+                    {
+                        Log.i("fetching user list"," found null");
+                        userModelList = fetchApiData.getUserList();
+                    }
 
                 setUserModelList(userModelList);
 
@@ -180,11 +195,11 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
 //                tempTodo.setUserId(4);
 
 //                for(ToDoModel obj : toDoModelList){
-//                    Log.i(Tag+" todo cha id", String.valueOf(obj.getId()));
-//                    Log.i(Tag+" todo cha title", String.valueOf(obj.getTitle()));
-//                    Log.i(Tag+" todo cha userId", String.valueOf(obj.getUserId()));
-//                    Log.i(Tag+" todo cha complted", String.valueOf(obj.getCompleted()));
-//                    Log.i(Tag+" todo cha dueDate", String.valueOf(obj.getDueDate()));
+//                    Log.i(Tag+" todo  id", String.valueOf(obj.getId()));
+//                    Log.i(Tag+" todo  title", String.valueOf(obj.getTitle()));
+//                    Log.i(Tag+" todo  userId", String.valueOf(obj.getUserId()));
+//                    Log.i(Tag+" todo  complted", String.valueOf(obj.getCompleted()));
+//                    Log.i(Tag+" todo  dueDate", String.valueOf(obj.getDueDate()));
 //                }
                 setCustomAdapter(new CustomAdapterForUsers((ArrayList<UserModel>) getUserModelList(),context));
 
@@ -210,18 +225,12 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
                                 Log.i("to delete ", userModelToDelete.getName() + " object id" + userModelToDelete.getId());
 
 
-
                                 editUser.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         userFragment = new UserFragment();
                                         Bundle bundle = new Bundle();
-                                     //   bundle.putParcelable("object to delete", (Parcelable) userModelToDelete);
-
-                                        //bundle.putParcelableArrayList("test",userModelToDelete);
                                         bundle.putSerializable("object to delete", userModelToDelete);
-
-
 
                                         userFragment.setArguments(bundle);
 
@@ -265,10 +274,9 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
                                                         }).start();
 
 
-
                                                         editUser.setVisibility(View.INVISIBLE);
                                                         deleteUser.setVisibility(View.INVISIBLE);
-                                                        // barTitle.setText("ToDo List");
+
                                                         customActionBar.setActionBarColor("#831919");
                                                         barTitle.setText("Interview app");
                                                         Toast.makeText(context,"User deleted",Toast.LENGTH_SHORT).show();
@@ -286,11 +294,6 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
 
                                     }
                                 });
-
-
-
-
-
                                 return true;
                             }
                         });
@@ -321,8 +324,8 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
                                 Integer userId = userModel.getId();
                                 String userName = userModel.getName();
                                 Log.i("fetched username",userName);
-                                Log.i("fetched username", String.valueOf(userId));
-//                                toDoModelListbyId = new ArrayList<ToDoModel>();
+                                Log.i("fetched id", String.valueOf(userId));
+
                                 for(ToDoModel toDoModel : toDoModelList){ // ToDoModel object matching with clicked userId extracted and added to toDoModelListbyId
                                     if(toDoModel.getUserId().equals(userId)){
 //                                    if(toDoModel.getUserId() == userId){
@@ -333,16 +336,11 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
                                     }
                                 }
 
-                                if(flag == 1) {
                                     Intent intent = new Intent(context, ToDoActivity.class);
                                     intent.putExtra("userId", userId);
                                     intent.putExtra("userName",userName);
                                     flag = 0;
-                                //    intent.putParcelableArrayListExtra("toDoModelList", (ArrayList<? extends Parcelable>) toDoModelListbyId);
                                     startActivity(intent);
-                                }
-                                else
-                                    Toast.makeText(context,"No to do list for "+userModel.getName(),Toast.LENGTH_LONG).show();
                             }
                         });
                     } // end of run(UI thread

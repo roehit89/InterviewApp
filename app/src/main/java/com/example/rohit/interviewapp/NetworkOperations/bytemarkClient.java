@@ -22,11 +22,9 @@ import retrofit.http.Path;
  */
 public interface bytemarkClient {
 
-   // String baseUrl = "http://69.119.215.250:3000";
 
     @GET("/users")
     Call<List<UserModel>> getAllUsers();
-  //  public List<UserModel> getAllUsers (@Path("user") String user);
 
     @GET("/todos")
     Call <List<ToDoModel>> getAllTodos();

@@ -24,6 +24,7 @@ public class CustomAdapterForToDo extends BaseAdapter {
 
     List<ToDoModel> toDoModelListbyId;
     Context context;
+
     public CustomAdapterForToDo(List<ToDoModel> toDoModelListbyId,Context context)
     {
         this.toDoModelListbyId = toDoModelListbyId;
@@ -61,13 +62,11 @@ public class CustomAdapterForToDo extends BaseAdapter {
 
         viewHolder.toDoTitle.setText(toDoModelListbyId.get(position).getTitle());
         viewHolder.toDoDueDate.setText(toDoModelListbyId.get(position).getDueDate().toString());
-        Log.i("Adapter madhe userId", String.valueOf(toDoModelListbyId.get(position).getUserId()));
-        Log.i("Adapter madhe due date", String.valueOf(toDoModelListbyId.get(position).getDueDate()));
-        Log.i("Adapter madhe contents", String.valueOf(toDoModelListbyId.get(position).describeContents()));
-     //   Log.i("Adapter madhe id", String.valueOf(toDoModelList.get(position).getId()));
+        Log.i("Adapter userId", String.valueOf(toDoModelListbyId.get(position).getUserId()));
+        Log.i("Adapter due date", String.valueOf(toDoModelListbyId.get(position).getDueDate()));
+        Log.i("Adapter contents", String.valueOf(toDoModelListbyId.get(position).describeContents()));
+        Log.i("Adapter id", String.valueOf(toDoModelListbyId.get(position).getId()));
         return convertView;
-
-      //  return null;
     }
 
     public class ViewHolder{

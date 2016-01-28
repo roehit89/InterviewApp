@@ -144,8 +144,6 @@ public class ToDoFragment extends Fragment {
                     switch_id.setChecked(false);
                     switch_id.setText("No   ");
                 }
-
-
             }
         }
 
@@ -229,21 +227,9 @@ public class ToDoFragment extends Fragment {
                 addUser.setVisibility(View.VISIBLE);
 
                 final String title_value = String.valueOf(todo_title.getText());
-               // String temp = todo_user_id.getText().toString();
-               // if(!temp.isEmpty()) {
-//                    user_id_value = Integer.parseInt(String.valueOf(todo_user_id.getText()));
                 user_id_value = getActivity().getIntent().getIntExtra("userId",-1);
-               // }
-                // final Integer todo_id_value = Integer.parseInt(String.valueOf(todo_id.getText()));
                 final String todo_date = String.valueOf(date_id.getText());
                 final String todo_time = String.valueOf(time_id.getText());
-
-                //   Log.i("clicked event fragmnt title", String.valueOf(title_value));
-                //   Log.i("clicked event fragmnt user id", String.valueOf(user_id_value));
-                //     Log.i("clicked event fragmnt todo id", String.valueOf(todo_id_value));
-
-                //Log.i("clicked event fragmnt date", String.valueOf(date_id.getText()));
-                //Log.i("clicked event fragmnt time", String.valueOf(time_id.getText()));
 
                 if(title_value.isEmpty())
                 {
@@ -300,8 +286,6 @@ public class ToDoFragment extends Fragment {
                         }).start();
                     }
                     getActivity().getFragmentManager().popBackStack();
-
-
                 }
             }
         });

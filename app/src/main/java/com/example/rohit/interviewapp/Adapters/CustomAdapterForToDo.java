@@ -62,6 +62,15 @@ public class CustomAdapterForToDo extends BaseAdapter {
 
         viewHolder.toDoTitle.setText(toDoModelListbyId.get(position).getTitle());
         viewHolder.toDoDueDate.setText(toDoModelListbyId.get(position).getDueDate().toString());
+
+        if(toDoModelListbyId.get(position).getCompleted().equals("true")){
+            viewHolder.toDoCompleted.setText("Completed");
+        }
+        else
+            viewHolder.toDoCompleted.setText("Pending");
+
+        //viewHolder.toDoCompleted.setText(toDoModelListbyId.get(position).getCompleted().toString());
+
         Log.i("Adapter userId", String.valueOf(toDoModelListbyId.get(position).getUserId()));
         Log.i("Adapter due date", String.valueOf(toDoModelListbyId.get(position).getDueDate()));
         Log.i("Adapter contents", String.valueOf(toDoModelListbyId.get(position).describeContents()));
@@ -73,6 +82,7 @@ public class CustomAdapterForToDo extends BaseAdapter {
 
         @Bind(R.id.toDoDueDate)TextView toDoDueDate;
         @Bind(R.id.toDoTitle)TextView toDoTitle;
+        @Bind(R.id.toDoCompleted)TextView toDoCompleted;
 
         ViewHolder(View view){
             ButterKnife.bind(this, view);

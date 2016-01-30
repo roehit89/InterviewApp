@@ -10,7 +10,7 @@ public class UserModel implements Serializable {
 
     private int id;
     private String name;
-    private String userName;
+    private String username;
     private String email;
     private String phone;
     private String website;
@@ -55,11 +55,11 @@ public class UserModel implements Serializable {
     }
 
     public String getUserName() {
-        return this.userName;
+        return this.username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserName(String username) {
+        this.username = username;
     }
 
     public String getEmail() {

@@ -4,20 +4,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_main" tools:context=".MainActivity">
+    tools:showIn="@layout/activity_main" tools:context=".MainActivity"
+    android:transitionGroup="false">
 
     <ListView
         android:id="@+id/fullListViewUsers"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="10.0sp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"></ListView>
+        android:divider="#F3F3F3"
+        android:dividerHeight="8.0sp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:drawSelectorOnTop="true"
+        android:elevation="8dp" >
+
+    </ListView>
 
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/user_fragmentContainer"></RelativeLayout>
+        android:id="@+id/user_fragmentContainer">
+
+    </RelativeLayout>
 
 </RelativeLayout>

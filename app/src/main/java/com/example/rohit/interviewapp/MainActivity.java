@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
     static ImageButton addUser;
     ImageButton deleteUser;
     ImageButton editUser;
-    ImageButton navButton;
+    ImageButton backButton;
     UserModel userModelToDelete = new UserModel();
 
    // @Bind(R.id.textViewTitle) TextView barTitle;
@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
 
     int flag = 0;
     int longPressFlag = 0;
+    int backPressCnt = 0;
 
     FragmentTransaction fragmentTransaction;
     UserFragment userFragment;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
      userModelList = getUserModelList();
      UserModel updateModel = userModel;
 
-        this.addUser.setVisibility(View.VISIBLE);
+     //   this.addUser.setVisibility(View.VISIBLE);
 
         for(UserModel obj  : userModelList){
             if(obj.getId() == id){
@@ -113,17 +114,19 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
         context = this;
         customActionBar.customActionBar(getSupportActionBar(), context);
 
-
+        backPressCnt = 1;
+        Log.i("back count", String.valueOf(backPressCnt));
        // @Bind(R.id.textViewTitle) barTitle;
         barTitle = (TextView) findViewById(R.id.textViewTitle);
-        addUser = (ImageButton) findViewById(R.id.addButtonId);
+      //  addUser = (ImageButton) findViewById(R.id.addButtonId);
+        addUser = (ImageButton) findViewById(R.id.floating_add_button);
         deleteUser = (ImageButton) findViewById(R.id.deleteButtonId);
         editUser = (ImageButton) findViewById(R.id.editButtonId);
-        navButton = (ImageButton) findViewById(R.id.navButtonId);
+    //    backButton = (ImageButton) findViewById(R.id.backButtonId);
 
         listView = (ListView)findViewById(R.id.fullListViewUsers);
 
-        navButton.setVisibility(View.INVISIBLE);
+//        backButton.setVisibility(View.INVISIBLE);
         editUser.setVisibility(View.INVISIBLE);
         deleteUser.setVisibility(View.INVISIBLE);
 
@@ -132,6 +135,8 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
             @Override
             public void onClick(View v) {
                 Integer max = 0;
+                backPressCnt = 0;
+                Log.i("back count", String.valueOf(backPressCnt));
                 for(UserModel userModel : userModelList)
                 {
                     if(userModel.getId()>max) max = userModel.getId();
@@ -214,7 +219,9 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
                             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
                                 longPressFlag = 1;
-                                customActionBar.setActionBarColor("#29993d");
+                                backPressCnt = 0;
+                                Log.i("back count", String.valueOf(backPressCnt));
+                            //    customActionBar.setActionBarColor("#29993d");
                                 editUser.setVisibility(View.VISIBLE);
                                 deleteUser.setVisibility(View.VISIBLE);
                                 barTitle.setText(getUserModelList().get(position).getName());
@@ -240,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
                                         fragmentTransaction.commit();
 
                                         listView.setVisibility(View.GONE); /// hide view on clicks made on fragment don't reflect on activity
-                                        addUser.setVisibility(View.INVISIBLE);
+                                     //   addUser.setVisibility(View.INVISIBLE);
                                         editUser.setVisibility(View.INVISIBLE);
                                         deleteUser.setVisibility(View.INVISIBLE);
                                     }
@@ -266,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
                                                                     public void run() {
                                                                         userModelList.remove(userModelToDelete);
                                                                         customAdapter.notifyDataSetChanged();
-                                                                        addUser.setVisibility(View.VISIBLE);
+                                                                  //      addUser.setVisibility(View.VISIBLE);
 
                                                                     }
                                                                 });
@@ -277,7 +284,7 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
                                                         editUser.setVisibility(View.INVISIBLE);
                                                         deleteUser.setVisibility(View.INVISIBLE);
 
-                                                        customActionBar.setActionBarColor("#831919");
+                                                    //    customActionBar.setActionBarColor("#831919");
                                                         barTitle.setText("Interview app");
                                                         Toast.makeText(context,"User deleted",Toast.LENGTH_SHORT).show();
                                                         break;
@@ -304,7 +311,7 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
                                 editUser.setVisibility(View.INVISIBLE);
                                 deleteUser.setVisibility(View.INVISIBLE);
                                // barTitle.setText("ToDo List");
-                                customActionBar.setActionBarColor("#831919");
+                              //  customActionBar.setActionBarColor("#831919");
                                 barTitle.setText("Interview app");
 
                                 longPressFlag = 0;
@@ -350,23 +357,31 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
     }
     @Override
     public void onBackPressed() {
+        backPressCnt++;
         if (getFragmentManager().getBackStackEntryCount() > 0 ){
             getFragmentManager().popBackStack();
             listView.setVisibility(View.VISIBLE);
+            barTitle.setText("Interview app");
             addUser.setVisibility(View.VISIBLE);
-
+            Log.i("in 1st if","");
         }
         if(longPressFlag == 1){
             editUser.setVisibility(View.INVISIBLE);
             deleteUser.setVisibility(View.INVISIBLE);
             // barTitle.setText("ToDo List");
-            customActionBar.setActionBarColor("#831919");
+          //  customActionBar.setActionBarColor("#831919");
             barTitle.setText("Interview app");
 
+            Log.i("in 2nd if", "");
         }
-        else {
-            super.onBackPressed();
-        }
+        //else {
+            Log.i("back count", String.valueOf(backPressCnt));
+          //  backPressCnt++;
+            if(backPressCnt == 2){
+                super.onBackPressed();
+            }
+
+      //  }
     }
     @Override
     public void onFragmentInteraction(Uri uri) {

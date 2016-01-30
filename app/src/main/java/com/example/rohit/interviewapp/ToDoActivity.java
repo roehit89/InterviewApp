@@ -35,16 +35,17 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
     ListView listView;
     String Tag = "ToDoActivity";
     CustomActionBar customActionBar = new CustomActionBar();
-    static ImageButton addUser;
+    ImageButton addUser;
     ImageButton deleteUser;
     ImageButton editUser;
     Integer buttonsVisible = 0;
     Integer maxId = 0;
+    Integer backPressCnt = 0;
 
     Context context;
     String userName;
     TextView barTitle = null;
-    ImageButton navButton;
+    ImageButton backButton;
     public android.support.v7.app.ActionBar actionBar;
     FragmentTransaction fragmentTransaction;
     ToDoFragment toDoFragment;
@@ -93,7 +94,7 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
         ToDoModel updateModel = toDoModel;
         updateModel.setId(id);
 
-        this.addUser.setVisibility(View.VISIBLE);
+       // this.addUser.setVisibility(View.VISIBLE);
 
         for(ToDoModel obj  : toDoModelListbyId){
             if(obj.getId() == id){
@@ -115,19 +116,21 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
         context = this;
         customActionBar.customActionBar(getSupportActionBar(), this);
 
-        addUser = (ImageButton) findViewById(R.id.addButtonId);
+        backPressCnt = 1;
+        addUser = (ImageButton) findViewById(R.id.fab);
+
         deleteUser = (ImageButton) findViewById(R.id.deleteButtonId);
         editUser = (ImageButton) findViewById(R.id.editButtonId);
-        navButton = (ImageButton) findViewById(R.id.navButtonId);
+        backButton = (ImageButton) findViewById(R.id.backButtonId);
 
-        navButton.setVisibility(View.VISIBLE);
+//        backButton.setVisibility(View.VISIBLE);
 
         Resources resources = this.getResources();
 
-        addUser.setImageDrawable(resources.getDrawable(R.drawable.ic_plus_circle_outline));
+ //       addUser.setImageDrawable(resources.getDrawable(R.drawable.ic_plus_circle_outline));
 
 
-        addUser.setVisibility(View.VISIBLE);
+//        addUser.setVisibility(View.VISIBLE);
         deleteUser.setVisibility(View.INVISIBLE);
         editUser.setVisibility(View.INVISIBLE);
 
@@ -175,6 +178,7 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
+                        backPressCnt = 0;
                         barTitle.setText(toDoModelListbyId.get(position).getTitle());
                         deleteUser.setVisibility(View.VISIBLE);
                         editUser.setVisibility(View.VISIBLE);
@@ -268,12 +272,13 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
 
 
 
-
         addUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 maxId = 0;
+                backPressCnt = 0;
+                addUser.setVisibility(View.INVISIBLE);
                 for(ToDoModel toDoModel : toDoModelList){
                     if(toDoModel.getId()>maxId){
                         maxId = toDoModel.getId();
@@ -290,7 +295,7 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
-                addUser.setVisibility(View.GONE);
+                //  addUser.setVisibility(View.GONE);
                 listView.setVisibility(View.GONE);
 
             }
@@ -300,22 +305,30 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
 
     @Override
     public void onBackPressed() {
+        backPressCnt++;
         if (getFragmentManager().getBackStackEntryCount() > 0 ){
             getFragmentManager().popBackStack();
             listView.setVisibility(View.VISIBLE);
             addUser.setVisibility(View.VISIBLE);
-
+            Log.i("came in 1st if"," ");
         }
         if(buttonsVisible == 1){
             deleteUser.setVisibility(View.INVISIBLE);
             editUser.setVisibility(View.INVISIBLE);
             buttonsVisible = 0;
             barTitle.setText(splitString[0] + "'s to do list");
+            Log.i("came in 1st if", " ");
         }
-        else {
-            super.onBackPressed();
+      //  else {
+            //backPressCnt++;
+            Log.i("back count ",backPressCnt.toString());
+            if(backPressCnt == 2){
+               // backPressCnt = 0;
+                super.onBackPressed();
+        //    }
         }
     }
+
     @Override
     public void onFragmentInteraction(Uri uri) {
     }

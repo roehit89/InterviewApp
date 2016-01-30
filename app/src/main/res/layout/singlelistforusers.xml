@@ -1,22 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="150dp"
-    android:background="#d33f3f">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="7dp"
+    android:background="#FFFFFF">
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="userName"
-        android:id="@+id/userName"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="10dp" />
+        android:orientation="vertical"
+        android:gravity="left">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:id="@+id/user_userName"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:layout_marginBottom="7dp" />
 
-    <TextView
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name : "
+                android:layout_margin="1.5dp"
+                android:textSize="12dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:id="@+id/user_name"
+                android:layout_margin="1.5dp"
+                android:layout_marginLeft="2dp"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phone : "
+                android:layout_margin="1.5dp"
+                android:textSize="12dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phone"
+                android:id="@+id/user_phone"
+                android:layout_margin="1.5dp"
+                android:layout_marginLeft="2dp"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email : "
+                android:layout_margin="1.5dp"
+                android:textSize="12dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email"
+                android:id="@+id/user_email"
+                android:layout_margin="1.5dp"
+                android:layout_marginLeft="2dp"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Company : "
+                android:layout_margin="1.5dp"
+                android:textSize="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Company"
+                android:id="@+id/user_company_name"
+                android:layout_margin="1.5dp"
+                android:layout_marginLeft="2dp"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+        </TableRow>
+    </TableLayout>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="userEmail"
-        android:id="@+id/userEmail" />
+        android:orientation="vertical"
+        android:gravity="left"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="40dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Address"
+            android:layout_margin="1.5dp"
+            android:layout_marginRight="1dp"
+            android:textSize="12dp" />
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TableRow>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Street"
+                    android:id="@+id/user_street"
+                    android:layout_margin="1.5dp"
+                    android:textStyle="bold"
+                    android:textSize="12dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginRight="1dp" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Suite"
+                    android:id="@+id/user_suit"
+                    android:layout_margin="1.5dp"
+                    android:textStyle="bold"
+                    android:textSize="12dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginRight="1dp" />
+            </TableRow>
+            <TableRow android:layout_margin="1.5dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginRight="1dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Zipcode"
+                    android:id="@+id/user_zipcode"
+                    android:layout_margin="1.5dp"
+                    android:textStyle="bold"
+                    android:textSize="12dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginRight="1dp" />
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
 
 
-</LinearLayout>
+</RelativeLayout>

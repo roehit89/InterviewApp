@@ -3,7 +3,8 @@
     android:layout_height="match_parent"
     tools:context="com.example.rohit.interviewapp.testFragment"
     android:id="@+id/todo_fragment"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="#FFFFFF">
 
         <LinearLayout
             android:layout_width="100dp"

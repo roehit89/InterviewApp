@@ -10,13 +10,27 @@
         android:id="@+id/fullListViewToDo"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="10.0sp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"></ListView>
+        android:divider="#F3F3F3"
+        android:dividerHeight="8.0sp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:drawSelectorOnTop="true"
+        android:elevation="8dp" >
+
+    </ListView>
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/todo_fragmentContainer"></RelativeLayout>
+        android:id="@+id/todo_fragmentContainer">
+
+    </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton android:id="@+id/fab"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end" android:layout_margin="@dimen/fab_margin"
+        android:src="@android:drawable/ic_input_add"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true" />
+
 
 </RelativeLayout>

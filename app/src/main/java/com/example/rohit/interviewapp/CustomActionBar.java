@@ -20,7 +20,7 @@ public class CustomActionBar {
 
         actionBar = supportActionBar;
         //   actionBar.setBackgroundDrawable(new ColorDrawable(Color.argb(255, 255, 255, 255)));
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#831919")));
+        //actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#831919")));
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(false); /// used to get back button on actionbar
         actionBar.setDisplayShowTitleEnabled(false);// to show name of app as title

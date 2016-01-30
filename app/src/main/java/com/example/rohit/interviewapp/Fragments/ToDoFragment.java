@@ -110,10 +110,10 @@ public class ToDoFragment extends Fragment {
         add_Button = (TextView) view.findViewById(R.id.add_Button_todo);
         cancel_Button = (TextView) view.findViewById(R.id.cancel_Button_todo);
 
-        addUser = (ImageButton) getActivity().findViewById(R.id.addButtonId);
+        addUser = (ImageButton) getActivity().findViewById(R.id.fab);
         editUser = (ImageButton) getActivity().findViewById(R.id.editButtonId);
 
-        addUser.setVisibility(View.INVISIBLE);
+//        addUser.setVisibility(View.INVISIBLE);
         editUser.setVisibility(View.INVISIBLE);
 
         if(getArguments()!=null) {
@@ -131,6 +131,7 @@ public class ToDoFragment extends Fragment {
                 flag_edit = 1;
                 todo_title.setText(deleteObject.getTitle());
                 String temp_date_time[] = deleteObject.getDueDate().split(" ");
+                todo_title.setEnabled(false);
 
                 date_id.setText(temp_date_time[0]);
                 time_id.setText(temp_date_time[1]);
@@ -217,7 +218,7 @@ public class ToDoFragment extends Fragment {
                 getActivity().getFragmentManager().popBackStack();
                 ListView listView = (ListView)getActivity().findViewById(R.id.fullListViewToDo);
                 listView.setVisibility(View.VISIBLE);
-//                addUser.setVisibility(View.VISIBLE);
+                addUser.setVisibility(View.VISIBLE);
             }
         });
         add_Button.setOnClickListener(new View.OnClickListener() {

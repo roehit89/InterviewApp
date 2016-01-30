@@ -6,74 +6,34 @@
     android:orientation="horizontal"
     android:gravity="center_vertical">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <!--ImageButton
-            android:id="@+id/backButtonId"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentStart="false"
-            android:src="@drawable/ic_action_back"
-            android:visibility="visible"
-            android:layout_alignParentLeft="false"
-            android:adjustViewBounds="false"
-            android:background="@android:color/transparent"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="-5dp"
-            android:layout_marginRight="8dp" /-->
-        <ImageButton
-            android:id="@+id/navButtonId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerInParent="true"
-            android:src="@drawable/ic_drawer"
-            android:visibility="visible"
-            android:layout_alignParentLeft="true"
-            android:adjustViewBounds="true"
-            android:background="@android:color/transparent"/>
-            android:layout_alignStart="@id/backButtonId" />
-    </RelativeLayout>
     <TextView
         android:id="@+id/textViewTitle"
-        android:layout_width="120dp"
+        android:layout_width="160dp"
+
+        android:layout_centerInParent="true"
         android:layout_height="match_parent"
-        android:layout_gravity="center|top"
+        android:layout_gravity="center|bottom"
         android:singleLine="true"
         android:text="Interview app"
-        android:maxWidth="120dp"
+        android:maxWidth="160dp"
         android:textColor="@android:color/white"
         android:textSize="17.5dp"
         android:textStyle="bold"
         android:background="@android:color/transparent"
-
-        android:layout_centerInParent="true"
         android:layout_alignLeft="@+id/newTagId"
         android:layout_alignParentLeft="true"
         android:layout_toRightOf="@+id/backButtonId"
-        android:paddingLeft="10dp"
-        android:gravity="left|start"
-        android:lines="2"
+        android:paddingLeft="6dp"
+        android:gravity="center_vertical|start|left"
+        android:lines="1"
         android:ellipsize="marquee"
-        android:maxLines="2" />
+        android:maxLines="1"
+        android:textAlignment="textStart"
+        android:longClickable="false" />
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
-        <ImageButton
-            android:id="@+id/addButtonId"
-            android:scaleType="fitCenter"
-            android:adjustViewBounds="true"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/ic_account_plus"
-            android:background="@android:color/transparent"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center|right"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="10dp" />
 
         <ImageButton
             android:id="@+id/deleteButtonId"
@@ -82,7 +42,7 @@
             android:src="@drawable/ic_account_remove"
 
             android:background="@android:color/transparent"
-            android:layout_toStartOf="@id/addButtonId"
+            android:layout_alignParentEnd="true"
             android:layout_centerInParent="true"
             android:layout_gravity="center|right"
             android:adjustViewBounds="true"
@@ -103,25 +63,4 @@
             android:layout_alignParentStart="false"
             android:layout_marginRight="20dp" />
     </RelativeLayout>
-    <!--TextView
-        android:id="@+id/textViewTitle"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:singleLine="true"
-        android:text="Inteview app"
-        android:maxWidth="120dp"
-        android:textColor="@android:color/white"
-        android:textSize="15dp"
-        android:textStyle="bold"
-        android:background="@android:color/transparent"
-
-        android:layout_centerInParent="true"
-        android:layout_alignLeft="@+id/newTagId"
-        android:layout_alignParentLeft="true"
-        android:layout_toRightOf="@+id/backButtonId"
-        android:paddingLeft="10dp"
-        android:gravity="left|start" /-->
-
-
 </LinearLayout>

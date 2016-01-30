@@ -49,13 +49,15 @@ public class FetchApiData {
             Log.i(Tag+" myError",e.toString());
         }
 
-//        for(UserModel eachObject : userResultList){ // check if object is correctly received.
+        for(UserModel eachObject : userResultList){ // check if object is correctly received.
 //            Log.i(Tag+" user result title", String.valueOf(eachObject.getName()));
 //            Log.i(Tag+" user result city", String.valueOf(eachObject.getAddress().getCity()));
 //            Log.i(Tag+" user result company", String.valueOf(eachObject.getCompany().getCompanyName()));
 //            Log.i(Tag+" user result latitute", String.valueOf(eachObject.getAddress().getGeo().getLat()));
        //     Log.i(Tag+" user result id", String.valueOf(eachObject.getId()));
-//        }
+            Log.i(Tag+" user result name", String.valueOf(eachObject.getName()));
+            Log.i(Tag+" user result usrname", String.valueOf(eachObject.getUserName()));
+        }
         if(userResultList == null)
             return null;
         else

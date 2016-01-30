@@ -76,11 +76,13 @@ public class UserFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_user, container, false);
 
         listView = (ListView)getActivity().findViewById(R.id.fullListViewUsers);
+        barTitle = (TextView) getActivity().findViewById(R.id.textViewTitle);
+        barTitle.setText("Add new user");
 
         cancel_button = (Button) view.findViewById(R.id.cancel_Button_user);
         add_button= (Button) view.findViewById(R.id.add_Button_user); // add button for adding user details.
 
-        addUser = (ImageButton) view.findViewById(R.id.addButtonId);
+        addUser = (ImageButton) getActivity().findViewById(R.id.floating_add_button);
 
         user_name = (TextView) view.findViewById(R.id.user_name);
         user_userName = (TextView) view.findViewById(R.id.user_userName);
@@ -126,6 +128,22 @@ public class UserFragment extends Fragment {
                 user_user_lat.setText(deleteObject.getAddress().getGeo().getLat());
                 user_user_long.setText(deleteObject.getAddress().getGeo().getLng());
 
+                user_user_company_name.setText(deleteObject.getCompany().getCompanyName());
+                user_user_company_catchphrase.setText(deleteObject.getCompany().getCatchPhrase());
+                user_user_company_bs.setText(deleteObject.getCompany().getBs());
+
+
+                user_name.setEnabled(false);
+                user_website.setEnabled(false);
+                user_user_street.setEnabled(false);
+                user_user_suit.setEnabled(false);
+                user_user_city.setEnabled(false);
+                user_user_zipcode.setEnabled(false);
+                user_user_lat.setEnabled(false);
+                user_user_long.setEnabled(false);
+                user_user_company_name.setEnabled(false);
+                user_user_company_catchphrase.setEnabled(false);
+                user_user_company_bs.setEnabled(false);
             }
         }
        // Log.i("delete object",deleteObject.getName()+" "+deleteObject.getEmail());
@@ -135,6 +153,7 @@ public class UserFragment extends Fragment {
 
                 add_button.setClickable(false);
                 cancel_button.setClickable(false);
+                addUser.setVisibility(View.VISIBLE);
                 userModel.setId(userModelListLength);
                 Log.i("object id added", String.valueOf(userModel.getId()));
                 Log.i("user_name", user_name.getText().toString());
@@ -216,6 +235,7 @@ public class UserFragment extends Fragment {
 
                 ListView listView = (ListView)getActivity().findViewById(R.id.fullListViewUsers);
                 listView.setVisibility(View.VISIBLE);
+                addUser.setVisibility(View.VISIBLE);
             }
         });
 

@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,9 @@ import com.example.rohit.interviewapp.NetworkOperations.FetchApiData;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by Rohit on 1/17/2016.
  */
@@ -35,7 +39,8 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
     ListView listView;
     String Tag = "ToDoActivity";
     CustomActionBar customActionBar = new CustomActionBar();
-    ImageButton addUser;
+    //ImageButton addUser1;
+    @Bind(R.id.fab) ImageButton addUser1;
     ImageButton deleteUser;
     ImageButton editUser;
     Integer buttonsVisible = 0;
@@ -45,7 +50,6 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
     Context context;
     String userName;
     TextView barTitle = null;
-    ImageButton backButton;
     public android.support.v7.app.ActionBar actionBar;
     FragmentTransaction fragmentTransaction;
     ToDoFragment toDoFragment;
@@ -116,12 +120,14 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
         context = this;
         customActionBar.customActionBar(getSupportActionBar(), this);
 
+        ButterKnife.bind(this);
+
         backPressCnt = 1;
-        addUser = (ImageButton) findViewById(R.id.fab);
+       // addUser1 = (ImageButton) findViewById(R.id.fab);
 
         deleteUser = (ImageButton) findViewById(R.id.deleteButtonId);
         editUser = (ImageButton) findViewById(R.id.editButtonId);
-        backButton = (ImageButton) findViewById(R.id.backButtonId);
+        //backButton = (ImageButton) findViewById(R.id.backButtonId);
 
 //        backButton.setVisibility(View.VISIBLE);
 
@@ -143,7 +149,7 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
         splitString = userName.split("\\s+");
         Log.i("fetched usrname in todo",userName);
 
-        barTitle = (TextView) findViewById(R.id.textViewTitle);
+        barTitle = (TextView) findViewById(R.id.actionBarTitle);
         barTitle.setText(splitString[0] + "'s to do list");
 
         new Thread(new Runnable() {
@@ -159,13 +165,14 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
                         toDoModelListbyId.add(toDoModel);
                     }
                 }
+
                 setToDoModelListbyId(toDoModelListbyId);
 
                 setCustomAdapter(new CustomAdapterForToDo(toDoModelListbyId, context));
                 customAdapter = getCustomAdapter();
                 customAdapter.notifyDataSetChanged();
 
-                setToDoModelList(toDoModelListbyId);
+               // setToDoModelList(toDoModelListbyId);
 
                 listView = (ListView) findViewById(R.id.fullListViewToDo);
 
@@ -187,7 +194,6 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
                         Log.i("obj id", String.valueOf(toDoModelListbyId.get(position).getId()));
                         todoModelToDelete = toDoModelListbyId.get(position); // fetch object to be deleted or edited
 
-
                         editUser.setOnClickListener(new View.OnClickListener() {
                             @Override
                                 public void onClick(View v) {
@@ -204,7 +210,7 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
                                 fragmentTransaction.commit();
 
                                 listView.setVisibility(View.GONE); /// hide view on clicks made on fragment don't reflect on activity
-                                addUser.setVisibility(View.INVISIBLE);
+                                addUser1.setVisibility(View.INVISIBLE);
                                 editUser.setVisibility(View.INVISIBLE);
                                 deleteUser.setVisibility(View.INVISIBLE);
                             }
@@ -271,16 +277,18 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
         }).start();
 
 
+       // addUser.setEnabled(true);
 
-        addUser.setOnClickListener(new View.OnClickListener() {
+        addUser1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                Log.i("add button clicked", " ");
                 maxId = 0;
                 backPressCnt = 0;
-                addUser.setVisibility(View.INVISIBLE);
-                for(ToDoModel toDoModel : toDoModelList){
-                    if(toDoModel.getId()>maxId){
+                //addUser.setVisibility(View.INVISIBLE);
+                for (ToDoModel toDoModel : toDoModelList) {
+                    if (toDoModel.getId() > maxId) {
                         maxId = toDoModel.getId();
                     }
                 }
@@ -295,7 +303,7 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
-                //  addUser.setVisibility(View.GONE);
+                addUser1.setVisibility(View.GONE);
                 listView.setVisibility(View.GONE);
 
             }
@@ -309,7 +317,7 @@ public class ToDoActivity extends AppCompatActivity implements ToDoFragment.OnFr
         if (getFragmentManager().getBackStackEntryCount() > 0 ){
             getFragmentManager().popBackStack();
             listView.setVisibility(View.VISIBLE);
-            addUser.setVisibility(View.VISIBLE);
+            addUser1.setVisibility(View.VISIBLE);
             Log.i("came in 1st if"," ");
         }
         if(buttonsVisible == 1){

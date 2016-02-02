@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -44,18 +45,24 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
     private static CustomAdapterForUsers customAdapter;
     String Tag = "MainActivity";
     Context context = null;
-    private ListView listView;
+   // private ListView listView;
     ToDoModel tempTodo = new ToDoModel();
     CustomActionBar customActionBar = new CustomActionBar();
-    static ImageButton addUser;
+    //static ImageButton addUser;
+    @Bind(R.id.floating_add_button) ImageButton addUser;
+    //@Bind(R.id.deleteButtonId) ImageButton deleteUser;
     ImageButton deleteUser;
     ImageButton editUser;
     ImageButton backButton;
     UserModel userModelToDelete = new UserModel();
 
    // @Bind(R.id.textViewTitle) TextView barTitle;
+
+
+    @Bind(R.id.toolbar) Toolbar toolbar;
     TextView barTitle = null;
-    Toolbar toolbar = null;
+   // @Bind(R.id.textViewTitle) TextView barTitle; // doesn't work with bind
+   @Bind(R.id.fullListViewUsers) ListView listView;
 
     int flag = 0;
     int longPressFlag = 0;
@@ -108,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
 
         context = this;
@@ -117,14 +124,16 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
         backPressCnt = 1;
         Log.i("back count", String.valueOf(backPressCnt));
        // @Bind(R.id.textViewTitle) barTitle;
-        barTitle = (TextView) findViewById(R.id.textViewTitle);
+        barTitle = (TextView) findViewById(R.id.actionBarTitle);
       //  addUser = (ImageButton) findViewById(R.id.addButtonId);
-        addUser = (ImageButton) findViewById(R.id.floating_add_button);
+
+ //       addUser = (ImageButton) findViewById(R.id.floating_add_button);
         deleteUser = (ImageButton) findViewById(R.id.deleteButtonId);
         editUser = (ImageButton) findViewById(R.id.editButtonId);
     //    backButton = (ImageButton) findViewById(R.id.backButtonId);
 
-        listView = (ListView)findViewById(R.id.fullListViewUsers);
+
+        //listView = (ListView)findViewById(R.id.fullListViewUsers);
 
 //        backButton.setVisibility(View.INVISIBLE);
         editUser.setVisibility(View.INVISIBLE);
@@ -137,10 +146,12 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
                 Integer max = 0;
                 backPressCnt = 0;
                 Log.i("back count", String.valueOf(backPressCnt));
+
                 for(UserModel userModel : userModelList)
                 {
                     if(userModel.getId()>max) max = userModel.getId();
                 }
+                Log.i("max id in main", String.valueOf(max));
                 Log.i("button clicked", " button clicked");
                 Bundle bundle = new Bundle();
                 bundle.putString("userModelListLength", String.valueOf(max + 1));

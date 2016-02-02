@@ -7,7 +7,7 @@
     android:gravity="center_vertical">
 
     <TextView
-        android:id="@+id/textViewTitle"
+        android:id="@+id/actionBarTitle"
         android:layout_width="160dp"
 
         android:layout_centerInParent="true"
@@ -15,7 +15,7 @@
         android:layout_gravity="center|bottom"
         android:singleLine="true"
         android:text="Interview app"
-        android:maxWidth="160dp"
+        android:maxWidth="200dp"
         android:textColor="@android:color/white"
         android:textSize="17.5dp"
         android:textStyle="bold"
@@ -25,9 +25,7 @@
         android:layout_toRightOf="@+id/backButtonId"
         android:paddingLeft="6dp"
         android:gravity="center_vertical|start|left"
-        android:lines="1"
         android:ellipsize="marquee"
-        android:maxLines="1"
         android:textAlignment="textStart"
         android:longClickable="false" />
 

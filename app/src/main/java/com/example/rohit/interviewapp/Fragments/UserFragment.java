@@ -1,9 +1,11 @@
 package com.example.rohit.interviewapp.Fragments;
 
 import android.app.Activity;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,10 @@ import org.w3c.dom.Text;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -35,6 +41,7 @@ import java.util.List;
  */
 public class UserFragment extends Fragment {
 
+   // @Nullable @Bind(R.id.cancel_Button_todo)Button cancel_button;
     Button cancel_button;
     Button add_button;
     ImageButton addUser;
@@ -48,6 +55,7 @@ public class UserFragment extends Fragment {
     UserModel deleteObject = new UserModel();
     MainActivity mainActivity = new MainActivity();
 
+   // @Bind(R.id.actionBarTitle)TextView barTitle;
     TextView barTitle = null;
     CustomActionBar customActionBar = new CustomActionBar();
 
@@ -75,8 +83,10 @@ public class UserFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_user, container, false);
 
-        listView = (ListView)getActivity().findViewById(R.id.fullListViewUsers);
-        barTitle = (TextView) getActivity().findViewById(R.id.textViewTitle);
+        ButterKnife.bind(this,view);
+
+        listView = (ListView)getActivity().findViewById(R.id.fullListViewUsers); // doesn't work with bind
+        barTitle = (TextView) getActivity().findViewById(R.id.actionBarTitle); // doesn't work with bind.
         barTitle.setText("Add new user");
 
         cancel_button = (Button) view.findViewById(R.id.cancel_Button_user);
@@ -192,7 +202,7 @@ public class UserFragment extends Fragment {
                     @Override
                     public void run() {
                         FetchApiData fetchApiData = new FetchApiData();
-                        if(flag_edit == 1){
+                        if (flag_edit == 1) {
                             flag_edit = 0;
                             fetchApiData.putUser(userModel, deleteObject.getId());
                             Log.i("user edited", "user edited");
@@ -201,13 +211,12 @@ public class UserFragment extends Fragment {
                                 public void run() {
                                     mainActivity.updateUserModelList(userModel, deleteObject.getId());
                                     listView.setVisibility(View.VISIBLE);
-                                    Toast.makeText(getActivity().getApplicationContext(),"User updated ",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity().getApplicationContext(), "User updated ", Toast.LENGTH_SHORT).show();
                                 }
                             });
 
                             getActivity().getFragmentManager().popBackStack();
-                        }
-                        else {
+                        } else {
                             fetchApiData.postUser(userModel);
                             mainActivity.addToUserModelList(userModel); // adds object to UserModelList. The same list used for UserAdapter
                             Log.i("user added", "user added");
@@ -216,7 +225,7 @@ public class UserFragment extends Fragment {
                                 @Override
                                 public void run() {
                                     listView.setVisibility(View.VISIBLE);
-                                    Toast.makeText(getActivity().getApplicationContext(),"User added",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity().getApplicationContext(), "User added", Toast.LENGTH_SHORT).show();
                                 }
                             });
 
@@ -227,7 +236,8 @@ public class UserFragment extends Fragment {
             }
         });
 
-        cancel_button.setOnClickListener(new View.OnClickListener() {
+
+                cancel_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().getFragmentManager().popBackStack();
@@ -247,5 +257,11 @@ public class UserFragment extends Fragment {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
 
 }

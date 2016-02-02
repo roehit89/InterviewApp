@@ -31,6 +31,8 @@ import com.example.rohit.interviewapp.ToDoActivity;
 import java.util.Calendar;
 import java.util.List;
 
+import butterknife.Bind;
+
 
 public class ToDoFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -51,6 +53,7 @@ public class ToDoFragment extends Fragment {
     private TextView time_id;
     private TextView add_Button;
     private TextView cancel_Button;
+   // @Bind(R.id.switch_id) Switch switch_id;
     private Switch switch_id;
     private TextView todo_user_id;
     private TextView todo_title;

@@ -65,6 +65,8 @@ public class ToDoFragment extends Fragment {
     Integer toDoMaxId;
     ToDoModel deleteObject = new ToDoModel();
     Integer flag_edit = 0;
+    String todo_date;
+    String todo_time;
 
     Activity activity;
     ListView listView;
@@ -133,11 +135,15 @@ public class ToDoFragment extends Fragment {
 
                 flag_edit = 1;
                 todo_title.setText(deleteObject.getTitle());
-                String temp_date_time[] = deleteObject.getDueDate().split(" ");
+                String temp_date_time[] = deleteObject.getDueDate().split("T");
                 todo_title.setEnabled(false);
 
                 date_id.setText(temp_date_time[0]);
                 time_id.setText(temp_date_time[1]);
+                Log.i("complete date/time",deleteObject.getDueDate());
+                Log.i("date fetched =", temp_date_time[0]);
+                Log.i("time fetched =", temp_date_time[1]);
+
                 Log.i("completed or not",deleteObject.getCompleted().toString());
 
                 if(deleteObject.getCompleted().equals("true")){
@@ -183,10 +189,10 @@ public class ToDoFragment extends Fragment {
                         Log.i("current hour", String.valueOf(hour));
                         if(selectedHour<hour)
                         {
-                            time_id.setError("Invalid date fdjska;fj sa;fjdka;fjdksa;f jdksa; fjdksa"); /// doesn't work for some reason.
+                            time_id.setError("Invalid date"); /// doesn't work for some reason.
                         }
                         else {
-                            time_id.setText(selectedHour + ":" + selectedMinute + ":"+ "00");
+                            time_id.setText(selectedHour + ":" + selectedMinute + ":"+ "00Z");
                             time_id.setError(null);
                         }
                     }
@@ -232,21 +238,25 @@ public class ToDoFragment extends Fragment {
 
                 final String title_value = String.valueOf(todo_title.getText());
                 user_id_value = getActivity().getIntent().getIntExtra("userId",-1);
-                final String todo_date = String.valueOf(date_id.getText());
-                final String todo_time = String.valueOf(time_id.getText());
+                todo_date = String.valueOf(date_id.getText());
+                todo_time = String.valueOf(time_id.getText());
 
-                if(title_value.isEmpty())
+                if(title_value.isEmpty() || todo_date.isEmpty() || todo_time.isEmpty())
                 {
-                    todo_title.setError("field cannot be empyt");
+                    if(title_value.isEmpty())
+                        todo_title.setError("Title cannot be empty");
+                    if(todo_date.isEmpty())
+                        date_id.setError("Date cannot be empty");
+                    if(todo_time.isEmpty())
+                        time_id.setError("Time cannot be empty");
                 }
                 else {
                     tempTodo = new ToDoModel();
-
                     tempTodo.setId(toDoMaxId);
                     Log.i("obj id set", String.valueOf(tempTodo.getId()));
                     tempTodo.setTitle(title_value);
                     tempTodo.setCompleted(String.valueOf(completed));
-                    tempTodo.setDueDate(todo_date +" "+ todo_time);
+                    tempTodo.setDueDate(todo_date +"T"+todo_time);
                     tempTodo.setUserId(user_id_value);
 
 

@@ -1,11 +1,13 @@
 package com.example.rohit.interviewapp.Fragments;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +33,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit.http.HTTP;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,6 +81,8 @@ public class UserFragment extends Fragment {
     TextView user_user_company_catchphrase;
     TextView user_user_company_bs;
 
+    //ScrollView scrollView = (ScrollView) view.findViewById(R.id.user_scrollview);
+    @Bind(R.id.user_scrollview) ScrollView scrollView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -161,78 +167,112 @@ public class UserFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                add_button.setClickable(false);
-                cancel_button.setClickable(false);
-                addUser.setVisibility(View.VISIBLE);
-                userModel.setId(userModelListLength);
-                Log.i("object id added", String.valueOf(userModel.getId()));
-                Log.i("user_name", user_name.getText().toString());
-                userModel.setName(user_name.getText().toString());
-                userModel.setUserName(user_userName.getText().toString());
-                userModel.setEmail(user_user_email.getText().toString());
-                userModel.setPhone(user_phone.getText().toString());
-                userModel.setWebsite(user_website.getText().toString());
+                if (user_name.getText().length() == 0 || user_userName.getText().length() == 0 || user_user_email.length() == 0) {
+                    if (user_name.getText().length() == 0)
+                        user_name.setError("Name cannot be empty");
+                    if (user_userName.getText().length() == 0)
+                        user_userName.setError("User name cannot be empty");
+                    if (user_user_email.getText().length() == 0)
+                        user_user_email.setError("Email cannot be empty");
 
 
-                UserModel.Company company = userModel.new Company();
-                UserModel.Address address = userModel.new Address();
-                UserModel.Address.Geo geo = address.new Geo();
+                    scrollView.scrollTo(0,0);
+                } else{
 
-                address.setStreet(user_user_street.getText().toString());
-                address.setSuite(user_user_suit.getText().toString());
-                address.setCity(user_user_city.getText().toString());
-                address.setZipCode(user_user_zipcode.getText().toString());
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
 
+                            String temp_email = user_user_email.getText().toString();
+                            Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+                            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[] {
+                                    temp_email});
+                            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "User created in Interview App (Do no reply)");
+                            emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, Html.fromHtml(new StringBuilder()
+                                    .append("<p>Hi,</p>")
+                                    .append("<p>Please check you todo list in the interview app.</p><p></p>")
+                                    .append("<p>Bytemarks.Inc</p>")
+                                    .toString()));
 
-                geo.setLat(user_user_lat.getText().toString());
-                geo.setLng(user_user_long.getText().toString());
-
-                address.setGeo(geo);
-                userModel.setAddress(address);
-
-                company.setCompanyName(user_user_company_name.getText().toString());
-                company.setCatchPhrase(user_user_company_catchphrase.getText().toString());
-                company.setBs(user_user_company_bs.getText().toString());
-
-                userModel.setCompany(company);
-
-                mainActivity = new MainActivity();
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        FetchApiData fetchApiData = new FetchApiData();
-                        if (flag_edit == 1) {
-                            flag_edit = 0;
-                            fetchApiData.putUser(userModel, deleteObject.getId());
-                            Log.i("user edited", "user edited");
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mainActivity.updateUserModelList(userModel, deleteObject.getId());
-                                    listView.setVisibility(View.VISIBLE);
-                                    Toast.makeText(getActivity().getApplicationContext(), "User updated ", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-
-                            getActivity().getFragmentManager().popBackStack();
-                        } else {
-                            fetchApiData.postUser(userModel);
-                            mainActivity.addToUserModelList(userModel); // adds object to UserModelList. The same list used for UserAdapter
-                            Log.i("user added", "user added");
-
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    listView.setVisibility(View.VISIBLE);
-                                    Toast.makeText(getActivity().getApplicationContext(), "User added", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-
-                            getActivity().getFragmentManager().popBackStack();
+                            emailIntent.setType("text/html");
+                            startActivity(emailIntent);
                         }
-                    }
-                }).start();
+                    }).start();
+
+
+                    add_button.setClickable(false);
+                    cancel_button.setClickable(false);
+                    addUser.setVisibility(View.VISIBLE);
+                    userModel.setId(userModelListLength);
+                    Log.i("object id added", String.valueOf(userModel.getId()));
+                    Log.i("user_name", user_name.getText().toString());
+                    userModel.setName(user_name.getText().toString());
+                    userModel.setUserName(user_userName.getText().toString());
+                    userModel.setEmail(user_user_email.getText().toString());
+                    userModel.setPhone(user_phone.getText().toString());
+                    userModel.setWebsite(user_website.getText().toString());
+
+
+                    UserModel.Company company = userModel.new Company();
+                    UserModel.Address address = userModel.new Address();
+                    UserModel.Address.Geo geo = address.new Geo();
+
+                    address.setStreet(user_user_street.getText().toString());
+                    address.setSuite(user_user_suit.getText().toString());
+                    address.setCity(user_user_city.getText().toString());
+                    address.setZipCode(user_user_zipcode.getText().toString());
+
+
+                    geo.setLat(user_user_lat.getText().toString());
+                    geo.setLng(user_user_long.getText().toString());
+
+                    address.setGeo(geo);
+                    userModel.setAddress(address);
+
+                    company.setCompanyName(user_user_company_name.getText().toString());
+                    company.setCatchPhrase(user_user_company_catchphrase.getText().toString());
+                    company.setBs(user_user_company_bs.getText().toString());
+
+                    userModel.setCompany(company);
+
+                    mainActivity = new MainActivity();
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            FetchApiData fetchApiData = new FetchApiData();
+                            if (flag_edit == 1) {
+                                flag_edit = 0;
+                                fetchApiData.putUser(userModel, deleteObject.getId());
+                                Log.i("user edited", "user edited");
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mainActivity.updateUserModelList(userModel, deleteObject.getId());
+                                        listView.setVisibility(View.VISIBLE);
+                                        Toast.makeText(getActivity().getApplicationContext(), "User updated ", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                                getActivity().getFragmentManager().popBackStack();
+                            } else {
+                                fetchApiData.postUser(userModel);
+                                mainActivity.addToUserModelList(userModel); // adds object to UserModelList. The same list used for UserAdapter
+                                Log.i("user added", "user added");
+
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        listView.setVisibility(View.VISIBLE);
+                                        Toast.makeText(getActivity().getApplicationContext(), "User added", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                                getActivity().getFragmentManager().popBackStack();
+                            }
+                        }
+                    }).start();
+                }
             }
         });
 

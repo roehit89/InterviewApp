@@ -182,19 +182,20 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
                 toDoModelList = fetchApiData.getToDoList();
                 userModelList = fetchApiData.getUserList();
 
-                if(toDoModelList == null)
-                while (toDoModelList!= null)
-                {
-                    Log.i("fetching to do list"," found null");
-                    toDoModelList = fetchApiData.getToDoList();
-                }
-
-                if(userModelList == null)
-                    while (userModelList!= null)
-                    {
-                        Log.i("fetching user list"," found null");
-                        userModelList = fetchApiData.getUserList();
-                    }
+                Log.i("todo list blank",toDoModelList.toString());
+//                if(toDoModelList == null)
+//                while (toDoModelList!= null)
+//                {
+//                    Log.i("fetching to do list"," found null");
+//                    toDoModelList = fetchApiData.getToDoList();
+//                }
+//
+//                if(userModelList == null)
+//                    while (userModelList!= null)
+//                    {
+//                        Log.i("fetching user list"," found null");
+//                        userModelList = fetchApiData.getUserList();
+//                    }
 
                 setUserModelList(userModelList);
 
@@ -344,14 +345,16 @@ public class MainActivity extends AppCompatActivity implements UserFragment.OnFr
                                 Log.i("fetched username",userName);
                                 Log.i("fetched id", String.valueOf(userId));
 
+                                Log.i("todomodesllist test",toDoModelList.toString());
                                 for(ToDoModel toDoModel : toDoModelList){ // ToDoModel object matching with clicked userId extracted and added to toDoModelListbyId
-                                    if(toDoModel.getUserId().equals(userId)){
+ //                                   Log.i("check id",toDoModel.getUserId().toString());
+ //                                   if(toDoModel.getUserId().equals(userId)){
 //                                    if(toDoModel.getUserId() == userId){
 //                                        Log.i("user id matched", toDoModel.getUserId().toString());
 //                                        toDoModelListbyId.add(toDoModel);
                                     flag = 1;
                                     longPressFlag = 0;
-                                    }
+//                                    }
                                 }
 
                                     Intent intent = new Intent(context, ToDoActivity.class);
